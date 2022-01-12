@@ -2,7 +2,10 @@ module steampipe-plugin-freshservice
 
 go 1.17
 
-require github.com/turbot/steampipe-plugin-sdk v1.8.3
+require (
+	github.com/CoreyGriffin/go-freshservice v0.0.1
+	github.com/turbot/steampipe-plugin-sdk v1.8.3
+)
 
 require (
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d // indirect
