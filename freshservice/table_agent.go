@@ -187,7 +187,12 @@ func listAgents(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 		return nil, fmt.Errorf("unable to create FreshService Agent client: %v", err)
 	}
 
-	filter := &fs.ListAgentsOptions{}
+	filter := fs.ListAgentsOptions{
+		ListOptions: fs.ListOptions{
+			Page:    1,
+			PerPage: 30,
+		},
+	}
 	q := d.KeyColumnQuals
 
 	if q["email"] != nil {
@@ -200,13 +205,21 @@ func listAgents(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 		filter.Active = &a
 	}
 
-	agents, _, err := client.Agents.ListAgents(filter) // TODO: Handle Paging
-	if err != nil {
-		return nil, fmt.Errorf("unable to obtain agents: %v", err)
-	}
+	for {
+		agents, res, err := client.Agents.ListAgents(&filter)
+		if err != nil {
+			return nil, fmt.Errorf("unable to obtain agents: %v", err)
+		}
 
-	for _, agent := range agents.Collection {
-		d.StreamListItem(ctx, agent)
+		for _, agent := range agents.Collection {
+			d.StreamListItem(ctx, agent)
+		}
+
+		if res.Header.Get("link") == "" {
+			break
+		}
+
+		filter.Page += 1
 	}
 	return nil, nil
 }

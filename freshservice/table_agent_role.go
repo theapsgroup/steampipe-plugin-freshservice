@@ -80,15 +80,30 @@ func listAgentRoles(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateD
 		return nil, fmt.Errorf("unable to create FreshService Agent client: %v", err)
 	}
 
-	filter := &fs.ListAgentRolesOptions{}
-
-	roles, _, err := client.Agents.ListAgentRoles(*filter) // TODO: Handle Paging
-	if err != nil {
-		return nil, fmt.Errorf("unable to obtain agent roles: %v", err)
+	lo := fs.ListOptions{
+		Page:    1,
+		PerPage: 30,
 	}
 
-	for _, role := range roles.Collection {
-		d.StreamListItem(ctx, role)
+	filter := fs.ListAgentRolesOptions{
+		ListOptions: lo,
+	}
+
+	for {
+		roles, res, err := client.Agents.ListAgentRoles(filter)
+		if err != nil {
+			return nil, fmt.Errorf("unable to obtain agent roles: %v", err)
+		}
+
+		for _, role := range roles.Collection {
+			d.StreamListItem(ctx, role)
+		}
+
+		if res.Header.Get("link") == "" {
+			break
+		}
+
+		filter.Page += 1
 	}
 	return nil, nil
 }
