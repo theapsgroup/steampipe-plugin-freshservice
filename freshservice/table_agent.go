@@ -169,7 +169,7 @@ func getAgent(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (
 
 	client, err := connect(ctx, d)
 	if err != nil {
-		return nil, fmt.Errorf("unable to create FreshService Agent client: %v", err)
+		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	agent, _, err := client.Agents.GetAgent(id)
@@ -184,7 +184,7 @@ func listAgents(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 
 	client, err := connect(ctx, d)
 	if err != nil {
-		return nil, fmt.Errorf("unable to create FreshService Agent client: %v", err)
+		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	filter := fs.ListAgentsOptions{

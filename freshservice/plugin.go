@@ -17,6 +17,7 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 		TableMap: map[string]*plugin.Table{
 			"freshservice_agent":      tableAgent(),
 			"freshservice_agent_role": tableAgentRole(),
+			"freshservice_asset":      tableAsset(),
 		},
 	}
 
