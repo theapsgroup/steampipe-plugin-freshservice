@@ -3,7 +3,7 @@ module steampipe-plugin-freshservice
 go 1.17
 
 require (
-	github.com/CoreyGriffin/go-freshservice v0.0.1
+	github.com/theapsgroup/go-freshservice v0.0.1-alpha.1
 	github.com/turbot/steampipe-plugin-sdk v1.8.3
 )
 
@@ -20,8 +20,11 @@ require (
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/golang/glog v1.0.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/hashicorp/go-cleanhttp v0.5.1 // indirect
 	github.com/hashicorp/go-hclog v0.15.0 // indirect
 	github.com/hashicorp/go-plugin v1.4.1 // indirect
+	github.com/hashicorp/go-retryablehttp v0.7.0 // indirect
 	github.com/hashicorp/go-version v1.3.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.9.1 // indirect
 	github.com/hashicorp/yamux v0.0.0-20180604194846-3520598351bb // indirect

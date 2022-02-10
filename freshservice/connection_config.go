@@ -6,12 +6,12 @@ import (
 )
 
 type PluginConfig struct {
-	BaseUrl *string `cty:"base_url"`
-	Token   *string `cty:"token"`
+	Domain *string `cty:"domain"`
+	Token  *string `cty:"token"`
 }
 
 var ConfigSchema = map[string]*schema.Attribute{
-	"base_url": {
+	"domain": {
 		Type: schema.TypeString,
 	},
 	"token": {
