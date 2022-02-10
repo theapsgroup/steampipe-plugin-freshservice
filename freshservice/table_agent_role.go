@@ -63,7 +63,7 @@ func getAgentRole(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 
 	client, err := connect(ctx, d)
 	if err != nil {
-		return nil, fmt.Errorf("unable to create FreshService Agent client: %v", err)
+		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	role, _, err := client.Agents.GetAgentRole(id)
@@ -77,7 +77,7 @@ func getAgentRole(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 func listAgentRoles(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
-		return nil, fmt.Errorf("unable to create FreshService Agent client: %v", err)
+		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	lo := fs.ListOptions{
