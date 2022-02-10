@@ -3,7 +3,7 @@ package freshservice
 import (
 	"context"
 	"fmt"
-	fs "github.com/CoreyGriffin/go-freshservice/freshservice"
+	fs "github.com/theapsgroup/go-freshservice/freshservice"
 	"github.com/turbot/steampipe-plugin-sdk/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/plugin"
 )
@@ -25,6 +25,10 @@ func tableAgent() *plugin.Table {
 				},
 			},
 		},
+		Get: &plugin.GetConfig{
+			Hydrate:    getAgent,
+			KeyColumns: plugin.SingleColumn("id"),
+		},
 		Columns: agentColumns(),
 	}
 }
@@ -45,6 +49,11 @@ func agentColumns() []*plugin.Column {
 			Name:        "last_name",
 			Description: "Last name of the agent.",
 			Type:        proto.ColumnType_STRING,
+		},
+		{
+			Name:        "occasional",
+			Description: "True if the agent is an occasional agent, and false if full-time agent.",
+			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "active",
@@ -122,6 +131,11 @@ func agentColumns() []*plugin.Column {
 			Type:        proto.ColumnType_JSON,
 		},
 		{
+			Name:        "department_ids",
+			Description: "Array of Unique IDs of the departments associated with the agent",
+			Type:        proto.ColumnType_JSON,
+		},
+		{
 			Name:        "last_login_at",
 			Description: "Timestamp of the agent's last successful login.",
 			Type:        proto.ColumnType_TIMESTAMP,
@@ -136,10 +150,36 @@ func agentColumns() []*plugin.Column {
 			Description: "Set to true if the user has logged in to Freshservice at least once, and false otherwise.",
 			Type:        proto.ColumnType_BOOL,
 		},
+		{
+			Name:        "created_at",
+			Description: "Timestamp when the agent was created",
+			Type:        proto.ColumnType_TIMESTAMP,
+		},
+		{
+			Name:        "updated_at",
+			Description: "Timestamp when the agent was last updated",
+			Type:        proto.ColumnType_TIMESTAMP,
+		},
 	}
 }
 
 // Hydrate Functions
+func getAgent(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
+	id := int(d.KeyColumnQuals["id"].GetInt64Value())
+
+	client, err := connect(ctx, d)
+	if err != nil {
+		return nil, fmt.Errorf("unable to create FreshService Agent client: %v", err)
+	}
+
+	agent, _, err := client.Agents.GetAgent(id)
+	if err != nil {
+		return nil, fmt.Errorf("unable to obtain agent with id %d: %v", id, err)
+	}
+
+	return agent, nil
+}
+
 func listAgents(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 
 	client, err := connect(ctx, d)
@@ -147,7 +187,7 @@ func listAgents(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 		return nil, fmt.Errorf("unable to create FreshService Agent client: %v", err)
 	}
 
-	filter := &fs.AgentListFilter{}
+	filter := &fs.ListAgentsOptions{}
 	q := d.KeyColumnQuals
 
 	if q["email"] != nil {
@@ -156,16 +196,16 @@ func listAgents(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 	}
 
 	if q["active"] != nil {
-		filter.Active = q["active"].GetBoolValue()
+		a := q["active"].GetBoolValue()
+		filter.Active = &a
 	}
 
-	bg := context.Background()
-	agents, _, err := client.Agents().List(bg, nil) // TODO: Handle Paging
+	agents, _, err := client.Agents.ListAgents(filter) // TODO: Handle Paging
 	if err != nil {
 		return nil, fmt.Errorf("unable to obtain agents: %v", err)
 	}
 
-	for _, agent := range agents {
+	for _, agent := range agents.Collection {
 		d.StreamListItem(ctx, agent)
 	}
 	return nil, nil

@@ -3,30 +3,30 @@ package freshservice
 import (
 	"context"
 	"fmt"
-	fs "github.com/CoreyGriffin/go-freshservice/freshservice"
+	fs "github.com/theapsgroup/go-freshservice/freshservice"
 	"github.com/turbot/steampipe-plugin-sdk/plugin"
 	"os"
 )
 
 func connect(ctx context.Context, d *plugin.QueryData) (*fs.Client, error) {
-	baseUrl := os.Getenv("FRESHSERVICE_ADDR")
+	domain := os.Getenv("FRESHSERVICE_DOMAIN")
 	token := os.Getenv("FRESHSERVICE_TOKEN")
 
 	fsConfig := GetConfig(d.Connection)
 	if &fsConfig != nil {
-		if fsConfig.BaseUrl != nil {
-			baseUrl = *fsConfig.BaseUrl
+		if fsConfig.Domain != nil {
+			domain = *fsConfig.Domain
 		}
 		if fsConfig.Token != nil {
 			token = *fsConfig.Token
 		}
 	}
 
-	if baseUrl == "" || token == "" {
+	if domain == "" || token == "" {
 		errorMsg := ""
 
-		if baseUrl == "" {
-			errorMsg += missingConfigOptionError("base_url", "FRESHSERVICE_ADDR")
+		if domain == "" {
+			errorMsg += missingConfigOptionError("domain", "FRESHSERVICE_DOMAIN")
 		}
 
 		if token == "" {
@@ -38,7 +38,7 @@ func connect(ctx context.Context, d *plugin.QueryData) (*fs.Client, error) {
 		return new(fs.Client), fmt.Errorf(errorMsg)
 	}
 
-	api, err := fs.New(ctx, baseUrl, token, nil)
+	api, err := fs.NewClient(ctx, domain, token)
 	if err != nil {
 		return nil, fmt.Errorf("error creating api client for FreshService: %v", err)
 	}

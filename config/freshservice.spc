@@ -1,8 +1,8 @@
 connection "freshservice" {
   plugin = "theapsgroup/freshservice"
 
-  # The base URL of your FreshService Instance (Ignore if set in FRESHSERVICE_ADDR environment variable).
-  # base_url = "https://domain.freshservice.com"
+  # The sub-domain segment of your FreshService Instance (Ignore if set in FRESHSERVICE_DOMAIN environment variable).
+  # base_url = "my-corp"
 
   # Your access token for your FreshService Instance (Ignore if set in FRESHSERVICE_TOKEN environment variable).
   # token = "abc123"
