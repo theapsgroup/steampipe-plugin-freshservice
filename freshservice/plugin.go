@@ -15,9 +15,13 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 		},
 		DefaultTransform: transform.FromGo().NullIfZero(),
 		TableMap: map[string]*plugin.Table{
-			"freshservice_agent":      tableAgent(),
-			"freshservice_agent_role": tableAgentRole(),
-			"freshservice_asset":      tableAsset(),
+			"freshservice_agent":           tableAgent(),
+			"freshservice_agent_role":      tableAgentRole(),
+			"freshservice_announcement":    tableAnnouncement(),
+			"freshservice_asset":           tableAsset(),
+			"freshservice_asset_component": tableAssetComponent(),
+			"freshservice_asset_contract":  tableAssetContract(),
+			"freshservice_asset_type":      tableAssetType(),
 		},
 	}
 
