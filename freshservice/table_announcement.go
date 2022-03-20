@@ -68,7 +68,7 @@ func announcementColumns() []*plugin.Column {
 		},
 		{
 			Name:        "visible_to",
-			Description: "\tTimestamp until which Announcement is active",
+			Description: "Timestamp until which Announcement is active",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
@@ -93,7 +93,7 @@ func announcementColumns() []*plugin.Column {
 		},
 		{
 			Name:        "send_email",
-			Description: "Set to true if the user has logged in to Freshservice at least once, and false otherwise.",
+			Description: "True if the announcement needs to be sent via email as well. False, otherwise",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
