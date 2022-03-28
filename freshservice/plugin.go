@@ -22,6 +22,7 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			"freshservice_asset_component": tableAssetComponent(),
 			"freshservice_asset_contract":  tableAssetContract(),
 			"freshservice_asset_type":      tableAssetType(),
+			"freshservice_department":      tableDepartment(),
 		},
 	}
 
