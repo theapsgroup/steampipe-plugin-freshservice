@@ -13,7 +13,7 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			NewInstance: ConfigInstance,
 			Schema:      ConfigSchema,
 		},
-		DefaultTransform: transform.FromGo().NullIfZero(),
+		DefaultTransform: transform.FromGo(),
 		TableMap: map[string]*plugin.Table{
 			"freshservice_agent":           tableAgent(),
 			"freshservice_agent_role":      tableAgentRole(),
@@ -24,6 +24,8 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			"freshservice_asset_type":      tableAssetType(),
 			"freshservice_business_hour":   tableBusinessHour(),
 			"freshservice_department":      tableDepartment(),
+			"freshservice_ticket":          tableTicket(),
+			"freshservice_ticket_task":     tableTicketTask(),
 		},
 	}
 

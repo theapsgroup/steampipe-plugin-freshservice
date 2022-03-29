@@ -1,7 +1,5 @@
 # FreshService plugin for Steampipe
 
-> WIP: THIS IS NOT ACTIVE NOR WORKING - DO NOT USE!
-
 Use SQL to query information including Tickets, Agents, Assets and more from FreshService.
 
 - **[Get started →](https://hub.steampipe.io/plugins/theapsgroup/freshservice)**
