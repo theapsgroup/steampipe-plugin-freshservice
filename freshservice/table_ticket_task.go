@@ -11,8 +11,8 @@ import (
 
 func tableTicketTask() *plugin.Table {
 	return &plugin.Table{
-		Name:        "freshservice_ticket",
-		Description: "",
+		Name:        "freshservice_ticket_task",
+		Description: "Obtain tasks based on an associated Ticket",
 		List: &plugin.ListConfig{
 			Hydrate: listTicketTasks,
 			KeyColumns: []*plugin.KeyColumn{
