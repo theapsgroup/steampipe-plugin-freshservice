@@ -27,6 +27,7 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			"freshservice_ticket":              tableTicket(),
 			"freshservice_ticket_conversation": tableTicketConversation(),
 			"freshservice_ticket_task":         tableTicketTask(),
+			"freshservice_ticket_timeentry":    tableTicketTimeEntry(),
 		},
 	}
 
