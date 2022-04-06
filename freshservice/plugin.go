@@ -24,6 +24,7 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			"freshservice_asset_type":          tableAssetType(),
 			"freshservice_business_hour":       tableBusinessHour(),
 			"freshservice_department":          tableDepartment(),
+			"freshservice_location":            tableLocation(),
 			"freshservice_requester":           tableRequester(),
 			"freshservice_product":             tableProduct(),
 			"freshservice_ticket":              tableTicket(),
