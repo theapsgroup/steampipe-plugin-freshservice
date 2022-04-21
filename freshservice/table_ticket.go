@@ -243,8 +243,8 @@ func listTickets(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData
 	}
 
 	if q["requester_id"] != nil {
-		e := q["requester_id"].GetStringValue()
-		filter.Email = &e
+		r := int(q["requester_id"].GetInt64Value())
+		filter.RequesterID = &r
 	}
 
 	if q["type"] != nil {
