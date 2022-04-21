@@ -23,6 +23,8 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			"freshservice_asset_contract":      tableAssetContract(),
 			"freshservice_asset_type":          tableAssetType(),
 			"freshservice_business_hour":       tableBusinessHour(),
+			"freshservice_change":              tableChange(),
+			"freshservice_change_note":         tableChangeNote(),
 			"freshservice_department":          tableDepartment(),
 			"freshservice_location":            tableLocation(),
 			"freshservice_requester":           tableRequester(),

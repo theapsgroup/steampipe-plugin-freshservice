@@ -2,6 +2,8 @@
 
 Obtain information about Tickets in the FreshService instance.
 
+## Examples
+
 ### List all tickets
 
 ```sql
