@@ -9,24 +9,24 @@ import (
 	"github.com/turbot/steampipe-plugin-sdk/plugin/transform"
 )
 
-func tableTicketTask() *plugin.Table {
+func tableProblemTask() *plugin.Table {
 	return &plugin.Table{
-		Name:        "freshservice_ticket_task",
-		Description: "Obtain tasks based on an associated Ticket",
+		Name:        "freshservice_problem_task",
+		Description: "Obtain tasks based on an associated Problem",
 		List: &plugin.ListConfig{
-			Hydrate: listTicketTasks,
+			Hydrate: listProblemTasks,
 			KeyColumns: []*plugin.KeyColumn{
 				{
-					Name:    "ticket_id",
+					Name:    "problem_id",
 					Require: plugin.Required,
 				},
 			},
 		},
-		Columns: ticketTaskColumns(),
+		Columns: problemTaskColumns(),
 	}
 }
 
-func ticketTaskColumns() []*plugin.Column {
+func problemTaskColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
@@ -90,17 +90,17 @@ func ticketTaskColumns() []*plugin.Column {
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
-			Name:        "ticket_id",
-			Description: "Unique ID of the Ticket the task belongs to.",
+			Name:        "problem_id",
+			Description: "Unique ID of the Problem the task belongs to.",
 			Type:        proto.ColumnType_INT,
-			Transform:   transform.FromQual("ticket_id"),
+			Transform:   transform.FromQual("problem_id"),
 		},
 	}
 }
 
 // Hydrate Functions
-func listTicketTasks(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
-	ticketId := int(d.KeyColumnQuals["ticket_id"].GetInt64Value())
+func listProblemTasks(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
+	problemId := int(d.KeyColumnQuals["problem_id"].GetInt64Value())
 
 	client, err := connect(ctx, d)
 	if err != nil {
@@ -115,7 +115,7 @@ func listTicketTasks(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrate
 	}
 
 	for {
-		tasks, res, err := client.Tickets.ListTasks(ticketId, &filter)
+		tasks, res, err := client.Problems.ListTasks(problemId, &filter)
 		if err != nil {
 			return nil, fmt.Errorf("unable to obtain tasks: %v", err)
 		}
@@ -132,23 +132,4 @@ func listTicketTasks(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrate
 	}
 
 	return nil, nil
-}
-
-// Transform Functions
-func taskStatusDesc(_ context.Context, input *transform.TransformData) (interface{}, error) {
-	if input.Value == nil {
-		return "Unknown", nil
-	}
-
-	i := input.Value
-	switch i.(int) {
-	case 1:
-		return "Open", nil
-	case 2:
-		return "In Progress", nil
-	case 3:
-		return "Completed", nil
-	default:
-		return "Unknown", nil
-	}
 }
