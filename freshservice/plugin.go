@@ -31,6 +31,7 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			"freshservice_problem":             tableProblem(),
 			"freshservice_problem_note":        tableProblemNote(),
 			"freshservice_problem_task":        tableProblemTask(),
+			"freshservice_problem_timeentry":   tableProblemTimeEntry(),
 			"freshservice_product":             tableProduct(),
 			"freshservice_ticket":              tableTicket(),
 			"freshservice_ticket_conversation": tableTicketConversation(),
