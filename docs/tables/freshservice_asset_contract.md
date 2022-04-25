@@ -2,6 +2,8 @@
 
 Allows for obtaining information about contracts associated to an Asset.
 
+You **MUST** specify an `asset_display_id` in the `WHERE` or `JOIN` clause.
+
 ## Examples
 
 ### List all contracts associated to a specific asset

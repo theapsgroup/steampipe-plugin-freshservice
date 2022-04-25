@@ -2,6 +2,8 @@
 
 Allows for obtaining information about component parts of Assets from within the FreshService instance.
 
+You **MUST** specify an `asset_display_id` in the `WHERE` or `JOIN` clause.
+
 ## Examples
 
 ### List all components for a specific asset
