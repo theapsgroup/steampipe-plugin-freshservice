@@ -57,7 +57,7 @@ func ticketColumns() []*plugin.Column {
 		},
 		{
 			Name:        "description_text",
-			Description: "Subject of the ticket.",
+			Description: "Plain text content of the ticket.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
