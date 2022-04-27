@@ -8,24 +8,24 @@ import (
 	"github.com/turbot/steampipe-plugin-sdk/plugin/transform"
 )
 
-func tableProblemTimeEntry() *plugin.Table {
+func tableReleaseTimeEntry() *plugin.Table {
 	return &plugin.Table{
-		Name:        "freshservice_problem_timeentry",
-		Description: "Obtain time entries for a specific Problem",
+		Name:        "freshservice_release_timeentry",
+		Description: "Obtain time entries for a specific Release",
 		List: &plugin.ListConfig{
-			Hydrate: listProblemTimeEntries,
+			Hydrate: listReleaseTimeEntries,
 			KeyColumns: []*plugin.KeyColumn{
 				{
-					Name:    "problem_id",
+					Name:    "release_id",
 					Require: plugin.Required,
 				},
 			},
 		},
-		Columns: problemTimeEntryColumns(),
+		Columns: releaseTimeEntryColumns(),
 	}
 }
 
-func problemTimeEntryColumns() []*plugin.Column {
+func releaseTimeEntryColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
@@ -83,24 +83,24 @@ func problemTimeEntryColumns() []*plugin.Column {
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
-			Name:        "problem_id",
-			Description: "ID of the Problem the time entry belongs to.",
+			Name:        "release_id",
+			Description: "ID of the Release the time entry belongs to.",
 			Type:        proto.ColumnType_INT,
-			Transform:   transform.FromQual("problem_id"),
+			Transform:   transform.FromQual("release_id"),
 		},
 	}
 }
 
 // Hydrate Functions
-func listProblemTimeEntries(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
-	problemId := int(d.KeyColumnQuals["problem_id"].GetInt64Value())
+func listReleaseTimeEntries(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
+	releaseId := int(d.KeyColumnQuals["release_id"].GetInt64Value())
 
 	client, err := connect(ctx, d)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
-	entries, _, err := client.Problems.ListTimeEntries(problemId)
+	entries, _, err := client.Releases.ListTimeEntries(releaseId)
 	if err != nil {
 		return nil, fmt.Errorf("unable to obtain time entries: %v", err)
 	}
