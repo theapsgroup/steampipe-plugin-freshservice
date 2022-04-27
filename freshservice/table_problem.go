@@ -193,7 +193,7 @@ func listProblems(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 	for {
 		problems, res, err := client.Problems.ListProblems(&filter)
 		if err != nil {
-			return nil, fmt.Errorf("unable to obtain tickets: %v", err)
+			return nil, fmt.Errorf("unable to obtain releases: %v", err)
 		}
 
 		for _, problem := range problems.Collection {
