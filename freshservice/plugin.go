@@ -25,6 +25,7 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			"freshservice_business_hour":       tableBusinessHour(),
 			"freshservice_change":              tableChange(),
 			"freshservice_change_note":         tableChangeNote(),
+			"freshservice_contract":            tableContract(),
 			"freshservice_department":          tableDepartment(),
 			"freshservice_location":            tableLocation(),
 			"freshservice_requester":           tableRequester(),
