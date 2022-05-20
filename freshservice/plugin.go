@@ -47,6 +47,7 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			"freshservice_software_user":         tableSoftwareUser(),
 			"freshservice_solution_article":      tableSolutionArticle(),
 			"freshservice_solution_category":     tableSolutionCategory(),
+			"freshservice_solution_folder":       tableSolutionFolder(),
 			"freshservice_ticket":                tableTicket(),
 			"freshservice_ticket_conversation":   tableTicketConversation(),
 			"freshservice_ticket_task":           tableTicketTask(),
