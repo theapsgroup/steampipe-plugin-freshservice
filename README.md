@@ -23,7 +23,7 @@ vi ~/.steampipe/config/freshservice.spc
 
 or set the following Environment Variables
 
-- `FRESHSERVICE_ADDR` : The Endpoint at which to contact your FreshService instance (example: `https://domain.freshservice.com` )
+- `FRESHSERVICE_DOMAIN : The friendly sub-domain at which your instance is deployed (example: `my-corp` if your instance is `https://my-corp.freshservice.com`)
 - `FRESHSERVICE_TOKEN` : The API Key / Token to use.
 
 Run a query:
