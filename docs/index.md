@@ -52,3 +52,11 @@ connection "freshservice" {
   token    = "34vt5394t534rv4tvr435v74b395t34qv9q"
 }
 ```
+
+### Testing
+
+A quick test can be performed from your terminal with:
+
+```shell
+steampipe query "select * from freshservice_ticket"
+```
