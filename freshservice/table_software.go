@@ -99,11 +99,13 @@ func getSoftware(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_software.getSoftware", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	software, _, err := client.Software.GetApplication(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_software.getSoftware", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain software with id %d: %v", id, err)
 	}
 
@@ -113,6 +115,7 @@ func getSoftware(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData
 func listSoftware(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_software.listSoftware", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -123,9 +126,17 @@ func listSoftware(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		allSoftware, res, err := client.Software.ListApplications(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_software.listSoftware", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain software: %v", err)
 		}
 

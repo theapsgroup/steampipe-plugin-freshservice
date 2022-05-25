@@ -142,11 +142,13 @@ func getContract(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_contract.getContract", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	contract, _, err := client.Contracts.GetContract(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_contract.getContract", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain contract with id %d: %v", id, err)
 	}
 
@@ -156,6 +158,7 @@ func getContract(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData
 func listContracts(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_contract.listContracts", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -166,9 +169,17 @@ func listContracts(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDa
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		contracts, res, err := client.Contracts.ListContracts(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_contract.listContracts", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain contracts: %v", err)
 		}
 

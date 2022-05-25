@@ -119,11 +119,13 @@ func getAsset(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_asset.getAsset", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	asset, _, err := client.Assets.GetAsset(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_asset.getAsset", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain asset with display_id %d: %v", id, err)
 	}
 
@@ -133,6 +135,7 @@ func getAsset(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (
 func listAssets(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_asset.listAssets", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -143,9 +146,17 @@ func listAssets(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		agents, res, err := client.Assets.ListAssets(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_asset.listAssets", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain assets: %v", err)
 		}
 

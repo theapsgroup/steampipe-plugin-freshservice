@@ -147,25 +147,19 @@ func serviceColumns() []*plugin.Column {
 	}
 }
 
-/*
-type ServiceItem struct {
-	Cost                   float32   `json:"cost"`
-	CreatedAt              time.Time `json:"created_at"`
-	UpdatedAt              time.Time `json:"updated_at"`
-}
-*/
-
 // Hydrate Functions
 func getServiceItem(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	id := int(d.KeyColumnQuals["id"].GetInt64Value())
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_service.getServiceItem", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	service, _, err := client.Services.GetServiceItem(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_service.getServiceItem", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain service item with id %d: %v", id, err)
 	}
 
@@ -175,12 +169,14 @@ func getServiceItem(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateD
 func listServiceItems(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_service.listServiceItems", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	// Note: List operation returns all results without pagination.
 	serviceItems, _, err := client.Services.ListServiceItems()
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_service.listServiceItems", "connection_error", err)
 		return nil, fmt.Errorf("unable to obtain service items: %v", err)
 	}
 

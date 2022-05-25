@@ -85,6 +85,7 @@ func softwareUserColumns() []*plugin.Column {
 func listSoftwareUsers(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_software_user.listSoftwareUsers", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -95,6 +96,13 @@ func listSoftwareUsers(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	q := d.KeyColumnQuals
 	s := int(q["software_id"].GetInt64Value())
 
@@ -102,6 +110,7 @@ func listSoftwareUsers(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 		u := int(q["id"].GetInt64Value())
 		user, _, err := client.Software.GetSoftwareUser(s, u)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_software_user.listSoftwareUsers", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain software user: %v", err)
 		}
 
@@ -110,6 +119,7 @@ func listSoftwareUsers(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 		for {
 			users, res, err := client.Software.ListSoftwareUsers(s, &filter)
 			if err != nil {
+				plugin.Logger(ctx).Error("freshservice_software_user.listSoftwareUsers", "query_error", err)
 				return nil, fmt.Errorf("unable to obtain software users: %v", err)
 			}
 

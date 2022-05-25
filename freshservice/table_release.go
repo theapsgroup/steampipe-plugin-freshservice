@@ -148,11 +148,13 @@ func getRelease(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_release.getRelease", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	release, _, err := client.Releases.GetRelease(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_release.getRelease", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain release with id %d: %v", id, err)
 	}
 
@@ -162,6 +164,7 @@ func getRelease(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 func listReleases(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_release.listReleases", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -172,9 +175,17 @@ func listReleases(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		releases, res, err := client.Releases.ListReleases(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_release.listReleases", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain releases: %v", err)
 		}
 

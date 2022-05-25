@@ -69,11 +69,13 @@ func getAssetType(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_asset_type.getAssetType", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	assetType, _, err := client.Assets.GetAssetType(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_asset_type.getAssetType", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain asset type with id %d: %v", id, err)
 	}
 
@@ -83,6 +85,7 @@ func getAssetType(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 func listAssetTypes(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_asset_type.listAssetTypes", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -93,9 +96,17 @@ func listAssetTypes(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateD
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		assetTypes, res, err := client.Assets.ListAssetTypes(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_asset_type.listAssetTypes", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain asset types: %v", err)
 		}
 

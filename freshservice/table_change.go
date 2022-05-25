@@ -16,10 +16,6 @@ func tableChange() *plugin.Table {
 		List: &plugin.ListConfig{
 			Hydrate: listChanges,
 			KeyColumns: []*plugin.KeyColumn{
-				// {
-				// 	Name:    "filter",
-				// 	Require: plugin.Optional,
-				// },
 				{
 					Name:    "requester_id",
 					Require: plugin.Optional,
@@ -180,11 +176,13 @@ func getChange(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) 
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_change.getChange", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	change, _, err := client.Changes.GetChange(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_change.getChange", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain change with id %d: %v", id, err)
 	}
 
@@ -194,6 +192,7 @@ func getChange(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) 
 func listChanges(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_change.listChanges", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -205,10 +204,12 @@ func listChanges(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData
 		},
 	}
 
-	// if q["filter"] != nil {
-	// 	f := q["filter"].GetStringValue()
-	// 	filter.Filter = &f
-	// }
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
 
 	if q["requester_id"] != nil {
 		r := int(q["requester_id"].GetInt64Value())
@@ -218,6 +219,7 @@ func listChanges(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData
 	for {
 		changes, res, err := client.Changes.ListChanges(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_change.listChanges", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain changes: %v", err)
 		}
 

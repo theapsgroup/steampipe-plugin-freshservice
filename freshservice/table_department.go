@@ -74,11 +74,13 @@ func getDepartment(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDa
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_department.getDepartment", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	department, _, err := client.Departments.GetDepartment(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_department.getDepartment", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain department with id %d: %v", id, err)
 	}
 
@@ -88,6 +90,7 @@ func getDepartment(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDa
 func listDepartments(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_department.listDepartments", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -98,9 +101,17 @@ func listDepartments(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrate
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		departments, res, err := client.Departments.ListDepartments(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_department.listDepartments", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain departments: %v", err)
 		}
 

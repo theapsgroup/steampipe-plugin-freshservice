@@ -99,6 +99,7 @@ func solutionFolderColumns() []*plugin.Column {
 func listSolutionFolders(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_solution_folder.listSolutionFolders", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -116,6 +117,7 @@ func listSolutionFolders(ctx context.Context, d *plugin.QueryData, h *plugin.Hyd
 
 		folder, _, err := client.Solutions.GetSolutionFolder(folderId)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_solution_folder.listSolutionFolders", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain solution folder with id %d: %v", folderId, err)
 		}
 
@@ -124,6 +126,7 @@ func listSolutionFolders(ctx context.Context, d *plugin.QueryData, h *plugin.Hyd
 		for {
 			folders, res, err := client.Solutions.ListSolutionFolders(&filter)
 			if err != nil {
+				plugin.Logger(ctx).Error("freshservice_solution_folder.listSolutionFolders", "query_error", err)
 				return nil, fmt.Errorf("unable to obtain solution folders: %v", err)
 			}
 

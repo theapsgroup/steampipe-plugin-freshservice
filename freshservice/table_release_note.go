@@ -77,11 +77,13 @@ func listReleaseNotes(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_release_note.listReleaseNotes", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	notes, _, err := client.Releases.ListReleaseNotes(releaseId)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_release_note.listReleaseNotes", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain release notes: %v", err)
 	}
 

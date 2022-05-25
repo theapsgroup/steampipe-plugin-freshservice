@@ -77,11 +77,13 @@ func listProblemNotes(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_problem_note.listProblemNotes", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	notes, _, err := client.Problems.ListProblemNotes(problemId)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_problem_note.listProblemNotes", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain problem notes: %v", err)
 	}
 

@@ -74,6 +74,7 @@ func solutionCategoryColumns() []*plugin.Column {
 func listSolutionCategories(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_solution_category.listSolutionCategories", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -84,6 +85,13 @@ func listSolutionCategories(ctx context.Context, d *plugin.QueryData, h *plugin.
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	q := d.KeyColumnQuals
 
 	if q["id"] != nil {
@@ -91,6 +99,7 @@ func listSolutionCategories(ctx context.Context, d *plugin.QueryData, h *plugin.
 
 		category, _, err := client.Solutions.GetSolutionCategory(catId)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_solution_category.listSolutionCategories", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain solution category with id %d: %v", catId, err)
 		}
 
@@ -99,6 +108,7 @@ func listSolutionCategories(ctx context.Context, d *plugin.QueryData, h *plugin.
 		for {
 			categories, res, err := client.Solutions.ListSolutionCategories(&filter)
 			if err != nil {
+				plugin.Logger(ctx).Error("freshservice_solution_category.listSolutionCategories", "query_error", err)
 				return nil, fmt.Errorf("unable to obtain solution categories: %v", err)
 			}
 

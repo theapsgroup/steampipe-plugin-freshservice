@@ -132,11 +132,13 @@ func slaColumns() []*plugin.Column {
 func listSLAs(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_sla_policy.listSLAs", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	slas, _, err := client.ServiceLevelAgreements.ListPolicies()
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_sla_policy.listSLAs", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain sla policies: %v", err)
 	}
 

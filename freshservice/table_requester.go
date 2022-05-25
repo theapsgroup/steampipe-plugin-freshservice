@@ -147,11 +147,13 @@ func getRequester(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_requester.getRequester", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	requester, _, err := client.Requesters.GetRequester(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_requester.getRequester", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain requester with id %d: %v", id, err)
 	}
 
@@ -161,6 +163,7 @@ func getRequester(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 func listRequesters(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_requester.listRequesters", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -174,6 +177,13 @@ func listRequesters(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateD
 		IncludeAgents: &ia,
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	if q["email"] != nil {
 		e := q["email"].GetStringValue()
 		filter.Email = &e
@@ -182,6 +192,7 @@ func listRequesters(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateD
 	for {
 		users, res, err := client.Requesters.ListRequesters(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_requester.listRequesters", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain requesters: %v", err)
 		}
 

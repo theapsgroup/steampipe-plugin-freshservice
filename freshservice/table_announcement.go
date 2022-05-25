@@ -120,11 +120,13 @@ func getAnnouncement(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrate
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_announcement.getAnnouncement", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	announcement, _, err := client.Announcements.GetAnnouncement(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_announcement.getAnnouncement", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain announcement with id %d: %v", id, err)
 	}
 
@@ -134,6 +136,7 @@ func getAnnouncement(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrate
 func listAnnouncements(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_announcement.listAnnouncements", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -144,6 +147,13 @@ func listAnnouncements(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	q := d.KeyColumnQuals
 	if q["state"] != nil {
 		filter.State = q["state"].GetStringValue()
@@ -152,6 +162,7 @@ func listAnnouncements(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 	for {
 		announcements, res, err := client.Announcements.ListAnnouncements(filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_announcement.listAnnouncements", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain announcements: %v", err)
 		}
 

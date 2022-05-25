@@ -97,11 +97,13 @@ func listTicketTimeEntries(ctx context.Context, d *plugin.QueryData, h *plugin.H
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_ticket_timeentry.listTicketTimeEntries", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	entries, _, err := client.Tickets.ListTimeEntries(ticketId)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_ticket_timeentry.listTicketTimeEntries", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain time entries: %v", err)
 	}
 

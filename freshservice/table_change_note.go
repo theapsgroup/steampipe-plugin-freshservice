@@ -77,11 +77,13 @@ func listChangeNotes(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrate
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_change_note.listChangeNotes", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	notes, _, err := client.Changes.ListChangeNotes(changeId)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_change_note.listChangeNotes", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain change notes: %v", err)
 	}
 

@@ -62,16 +62,20 @@ func listAssetComponents(ctx context.Context, d *plugin.QueryData, h *plugin.Hyd
 	displayId := int(q["asset_display_id"].GetInt64Value())
 
 	if displayId == 0 {
-		return nil, fmt.Errorf("freshservice_asset_component List call requires an '=' qualifier for 'asset_display_id'")
+		err := fmt.Errorf("freshservice_asset_component List call requires an '=' qualifier for 'asset_display_id'")
+		plugin.Logger(ctx).Error("freshservice_asset_component.listAssetComponents", "missing_qualifier_error", err)
+		return nil, err
 	}
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_asset_component.listAssetComponents", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	components, _, err := client.Assets.ListAssetComponents(displayId)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_asset_component.listAssetComponents", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain asset components: %v", err)
 	}
 

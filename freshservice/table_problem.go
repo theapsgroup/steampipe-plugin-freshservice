@@ -166,11 +166,13 @@ func getProblem(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_problem.getProblem", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	problem, _, err := client.Problems.GetProblem(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_problem.getProblem", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain problem with id %d: %v", id, err)
 	}
 
@@ -180,6 +182,7 @@ func getProblem(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 func listProblems(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_problem.listProblems", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -190,9 +193,17 @@ func listProblems(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		problems, res, err := client.Problems.ListProblems(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_problem.listProblems", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain releases: %v", err)
 		}
 

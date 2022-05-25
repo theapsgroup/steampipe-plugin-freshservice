@@ -104,6 +104,7 @@ func listProblemTasks(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_problem_task.listProblemTasks", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -114,9 +115,17 @@ func listProblemTasks(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		tasks, res, err := client.Problems.ListTasks(problemId, &filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_problem_task.listProblemTasks", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain tasks: %v", err)
 		}
 

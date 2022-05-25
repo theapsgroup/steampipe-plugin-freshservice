@@ -62,16 +62,20 @@ func listAssetContracts(ctx context.Context, d *plugin.QueryData, h *plugin.Hydr
 	displayId := int(q["asset_display_id"].GetInt64Value())
 
 	if displayId == 0 {
-		return nil, fmt.Errorf("freshservice_asset_contract List call requires an '=' qualifier for 'asset_display_id'")
+		err := fmt.Errorf("freshservice_asset_contract List call requires an '=' qualifier for 'asset_display_id'")
+		plugin.Logger(ctx).Error("freshservice_asset_contract.listAssetContracts", "missing_qualifier_error", err)
+		return nil, err
 	}
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_asset_contract.listAssetContracts", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	contracts, _, err := client.Assets.ListAssetContracts(displayId)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_asset_contract.listAssetContracts", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain asset contracts: %v", err)
 	}
 

@@ -85,6 +85,7 @@ func softwareInstallationColumns() []*plugin.Column {
 func listSoftwareInstallations(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_software_installation.listSoftwareInstallations", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -93,6 +94,7 @@ func listSoftwareInstallations(ctx context.Context, d *plugin.QueryData, h *plug
 
 	installs, _, err := client.Software.ListInstallations(s)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_software_installation.listSoftwareInstallations", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain software installations: %v", err)
 	}
 

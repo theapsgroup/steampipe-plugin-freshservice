@@ -79,11 +79,13 @@ func getBusinessHours(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_business_hour.getBusinessHours", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	bh, _, err := client.BusinessHours.GetBusinessHours(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_business_hour.getBusinessHours", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain business hours configuration with id %d: %v", id, err)
 	}
 
@@ -93,6 +95,7 @@ func getBusinessHours(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 func listBusinessHours(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_business_hour.listBusinessHours", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -103,9 +106,17 @@ func listBusinessHours(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		bhs, res, err := client.BusinessHours.ListBusinessHours(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_business_hour.listBusinessHours", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain business hours configurations: %v", err)
 		}
 

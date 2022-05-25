@@ -89,11 +89,13 @@ func getProduct(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_product.getProduct", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	product, _, err := client.Products.GetProduct(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_product.getProduct", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain product with id %d: %v", id, err)
 	}
 
@@ -103,6 +105,7 @@ func getProduct(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 func listProducts(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_product.listProducts", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -113,9 +116,17 @@ func listProducts(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		products, res, err := client.Products.ListProducts(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_product.listProducts", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain products: %v", err)
 		}
 

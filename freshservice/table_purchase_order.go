@@ -134,11 +134,13 @@ func getPurchaseOrder(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_purchase_order.getPurchaseOrder", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	purchaseOrder, _, err := client.PurchaseOrders.GetPurchaseOrder(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_purchase_order.getPurchaseOrder", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain purchase order with id %d: %v", id, err)
 	}
 
@@ -148,6 +150,7 @@ func getPurchaseOrder(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 func listPurchaseOrders(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_purchase_order.listPurchaseOrders", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -158,9 +161,17 @@ func listPurchaseOrders(ctx context.Context, d *plugin.QueryData, h *plugin.Hydr
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		purchaseOrders, res, err := client.PurchaseOrders.ListPurchaseOrders(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_purchase_order.listPurchaseOrders", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain purchase orders: %v", err)
 		}
 

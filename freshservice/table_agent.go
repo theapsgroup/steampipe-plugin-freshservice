@@ -169,11 +169,13 @@ func getAgent(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_agent.getAgent", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	agent, _, err := client.Agents.GetAgent(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_agent.getAgent", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain agent with id %d: %v", id, err)
 	}
 
@@ -184,6 +186,7 @@ func listAgents(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_agent.listAgents", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -193,6 +196,14 @@ func listAgents(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 			PerPage: 30,
 		},
 	}
+
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	q := d.KeyColumnQuals
 
 	if q["email"] != nil {
@@ -208,6 +219,7 @@ func listAgents(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 	for {
 		agents, res, err := client.Agents.ListAgents(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_agent.listAgents", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain agents: %v", err)
 		}
 
