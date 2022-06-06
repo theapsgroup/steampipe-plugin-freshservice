@@ -12,7 +12,7 @@ import (
 func tableLocation() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_location",
-		Description: "Information about locations stored in FreshService",
+		Description: "Obtain information on locations registered in the FreshService Instance.",
 		List: &plugin.ListConfig{
 			Hydrate: listLocations,
 		},
@@ -28,7 +28,7 @@ func locationColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the location.",
+			Description: "ID of the location.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -72,7 +72,7 @@ func locationColumns() []*plugin.Column {
 		},
 		{
 			Name:        "zipcode",
-			Description: "Zip/Postal Code of the location.",
+			Description: "Zip/Postal code of the location.",
 			Type:        proto.ColumnType_STRING,
 			Transform:   transform.FromField("Address.ZipCode"),
 		},
@@ -84,12 +84,12 @@ func locationColumns() []*plugin.Column {
 		},
 		{
 			Name:        "created_at",
-			Description: "Date and time when the location was created.",
+			Description: "Timestamp when the location was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Date and time when the location was last updated.",
+			Description: "Timestamp when the location was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}

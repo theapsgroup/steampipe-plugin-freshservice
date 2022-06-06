@@ -11,7 +11,7 @@ import (
 func tableDepartment() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_department",
-		Description: "Information about Departments stored within the FreshService instance.",
+		Description: "Obtain information about Departments stored within the FreshService instance.",
 		List: &plugin.ListConfig{
 			Hydrate: listDepartments,
 		},
@@ -27,7 +27,7 @@ func departmentColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the department.",
+			Description: "ID of the department.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -42,27 +42,27 @@ func departmentColumns() []*plugin.Column {
 		},
 		{
 			Name:        "head_user_id",
-			Description: "Unique identifier of the agent or requester who serves as the head of the department.",
+			Description: "User ID of the agent or requester who serves as the head of the department.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "prime_user_id",
-			Description: "Unique identifier of the agent or requester who serves as the prime user of the department.",
+			Description: "User ID of the agent or requester who serves as the prime user of the department.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "domains",
-			Description: "Email domains associated with the department.",
+			Description: "Array of email domains associated with the department.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "created_at",
-			Description: "Date and time when the department was created.",
+			Description: "Timestamp when the department was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Date and time when the department was updated.",
+			Description: "Timestamp when the department was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}
