@@ -27,32 +27,32 @@ func contractColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the Contract.",
+			Description: "ID of the contract.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "name",
-			Description: "Name of the Contract.",
+			Description: "Name of the contract.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "description",
-			Description: "Description of the Contract.",
+			Description: "Description of the contract.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "vendor_id",
-			Description: "ID of the Vendor.",
+			Description: "ID of the vendor.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "auto_renew",
-			Description: "Set to true if the Contract renews automatically.",
+			Description: "True if the contract renews automatically.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "notify_expiry",
-			Description: "Set to true if the expiration notifications are configured for the Contract.",
+			Description: "True if the expiration notifications are configured for the contract.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
@@ -67,67 +67,67 @@ func contractColumns() []*plugin.Column {
 		},
 		{
 			Name:        "start_date",
-			Description: "Start date of the Contract.",
+			Description: "Start date of the contract.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "end_date",
-			Description: "End date of the Contract.",
+			Description: "End date of the contract.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "cost",
-			Description: "Cost of the Contract.",
-			Type:        proto.ColumnType_DOUBLE,
+			Description: "Cost of the contract.",
+			Type:        proto.ColumnType_STRING, // Formerly proto.ColumnType_DOUBLE but costs are to be strings (https://steampipe.io/docs/develop/plugin-release-checklist#column-types)
 		},
 		{
 			Name:        "status",
-			Description: "Status of the Contract.",
+			Description: "Status of the contract.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "contract_number",
-			Description: "Unique reference number for the Contract.",
+			Description: "Unique reference number for the contract.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "contract_type_id",
-			Description: "ID of the Contract Type.",
+			Description: "ID of the contract type.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "visible_to_id",
-			Description: "ID of agent group in FreshService to control visibility of the Contract.",
+			Description: "ID of agent group in FreshService to control visibility of the contract.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "notify_to",
-			Description: "An array of email address whom should be notified of Contract expiry.",
+			Description: "Array of email address whom should be notified of contract expiry.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "expiry_notified",
-			Description: "Set to true if the Contract expiration notification has been sent.",
+			Description: "True if the contract expiration notification has been sent.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "requester_id",
-			Description: "ID of user whom created/renewed the Contract.",
+			Description: "ID of user whom created/renewed the contract.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "delegatee_id",
-			Description: "ID of the Agent whom the Contract approval is delegated to",
+			Description: "ID of the agent whom the contract approval is delegated to",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "created_at",
-			Description: "Timestamp at which the Contract was created.",
+			Description: "Timestamp at which the contract was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Timestamp at which the Contract was updated.",
+			Description: "Timestamp at which the contract was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}

@@ -1,6 +1,6 @@
 # Table: freshservice_agent_role
 
-Obtain information about Agent Roles from your FreshService instance.
+Obtain information about Agent Roles from the FreshService instance.
 
 ## Examples
 

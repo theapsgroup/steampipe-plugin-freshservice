@@ -34,12 +34,12 @@ func changeColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the change.",
+			Description: "ID of the change.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "agent_id",
-			Description: "Unique ID of the agent to whom the change is assigned.",
+			Description: "ID of the agent to whom the change is assigned.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -54,7 +54,7 @@ func changeColumns() []*plugin.Column {
 		},
 		{
 			Name:        "requester_id",
-			Description: "User ID of the initiator of the change (requester).",
+			Description: "User ID of the initiator/requester of the change.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -159,12 +159,12 @@ func changeColumns() []*plugin.Column {
 		},
 		{
 			Name:        "created_at",
-			Description: "Timestamp at which change was created.",
+			Description: "Timestamp at which the change was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Timestamp at which change was last updated.",
+			Description: "Timestamp at which the change was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}

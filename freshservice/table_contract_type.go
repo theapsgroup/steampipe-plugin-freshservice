@@ -22,37 +22,37 @@ func contractTypeColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the Contract Type.",
+			Description: "ID of the contract type.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "name",
-			Description: "Name of the Contract Type.",
+			Description: "Name of the contract type.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "description",
-			Description: "Description of the Contract Type.",
+			Description: "Description of the contract type.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "needs_approval",
-			Description: "Set to true if the Contract Type needs approval.",
+			Description: "True if the contract type needs approval.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "is_default",
-			Description: "Set to true if the Contract Type is a default (or custom) type.",
+			Description: "True if the contract type is a default (or custom) type.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "created_at",
-			Description: "Timestamp at which the Contract Type was created.",
+			Description: "Timestamp at which the contract type was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Timestamp at which the Contract Type was updated.",
+			Description: "Timestamp at which the contract type was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}

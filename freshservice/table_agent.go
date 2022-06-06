@@ -11,7 +11,7 @@ import (
 func tableAgent() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_agent",
-		Description: "Information about agents (operators) of the FreshService instance.",
+		Description: "Obtain information about Agents (operators) of the FreshService instance.",
 		List: &plugin.ListConfig{
 			Hydrate: listAgents,
 			KeyColumns: []*plugin.KeyColumn{
@@ -57,7 +57,7 @@ func agentColumns() []*plugin.Column {
 		},
 		{
 			Name:        "active",
-			Description: "Indicates if the agent is active (enabled)",
+			Description: "True if the agent is active (enabled).",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
@@ -107,7 +107,7 @@ func agentColumns() []*plugin.Column {
 		},
 		{
 			Name:        "location_id",
-			Description: "Unique ID of the location associated with the agent.",
+			Description: "ID of the location associated with the agent.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -117,12 +117,12 @@ func agentColumns() []*plugin.Column {
 		},
 		{
 			Name:        "scoreboard_level_id",
-			Description: "Unique ID of the level of the agent in the Arcade. 1 (Beginner), 2 (Intermediate), 3 (Professional), 4 (Expert), 5 (Master), 6 (Guru).",
+			Description: "ID of the level of the agent in the Arcade. 1 (Beginner), 2 (Intermediate), 3 (Professional), 4 (Expert), 5 (Master), 6 (Guru).",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "member_of",
-			Description: "Unique IDs of the groups that the agent is a member of.",
+			Description: "Array of group IDs that the agent is a member of.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
@@ -147,17 +147,17 @@ func agentColumns() []*plugin.Column {
 		},
 		{
 			Name:        "has_logged_in",
-			Description: "Set to true if the user has logged in to Freshservice at least once, and false otherwise.",
+			Description: "Set to true if the agent has logged in to Freshservice at least once, and false otherwise.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "created_at",
-			Description: "Timestamp when the agent was created",
+			Description: "Timestamp when the agent was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Timestamp when the agent was last updated",
+			Description: "Timestamp when the agent was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}

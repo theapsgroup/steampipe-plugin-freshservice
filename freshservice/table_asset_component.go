@@ -11,7 +11,7 @@ import (
 func tableAssetComponent() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_asset_component",
-		Description: "Information about the Components of a specific Asset.",
+		Description: "Obtain information about the Components of a specific Asset.",
 		List: &plugin.ListConfig{
 			Hydrate:    listAssetComponents,
 			KeyColumns: plugin.SingleColumn("asset_display_id"),
@@ -30,27 +30,27 @@ func assetComponentColumns() []*plugin.Column {
 		},
 		{
 			Name:        "id",
-			Description: "Unique ID of the component.",
+			Description: "ID of the component.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "component_type",
-			Description: "Type of the Component. (Example: Processor, Memory)",
+			Description: "Type of the component. (Example: Processor, Memory)",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "component_data",
-			Description: "Details of the Component.",
+			Description: "Details of the component.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "created_at",
-			Description: "Date and time when the component was created.",
+			Description: "Timestamp when the component was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Date and time when the component was updated.",
+			Description: "Timestamp when the component was updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}

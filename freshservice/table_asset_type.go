@@ -11,7 +11,7 @@ import (
 func tableAssetType() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_asset_type",
-		Description: "Information about Asset Types in FreshService",
+		Description: "Obtain information about Asset Types from your FreshService instance.",
 		List: &plugin.ListConfig{
 			Hydrate: listAssetTypes,
 		},
@@ -27,7 +27,7 @@ func assetTypeColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the asset type.",
+			Description: "ID of the asset type.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -47,17 +47,17 @@ func assetTypeColumns() []*plugin.Column {
 		},
 		{
 			Name:        "visible",
-			Description: "Visibility of the default asset type. Set to true if the asset type is visible.",
+			Description: "True if the asset type is visible.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "created_at",
-			Description: "Date and time when the asset type was created",
+			Description: "Timestamp when the asset type was created",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Date and time when the asset type was last updated",
+			Description: "Timestamp when the asset type was last updated",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}

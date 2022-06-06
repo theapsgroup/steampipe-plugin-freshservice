@@ -11,7 +11,7 @@ import (
 func tableAssetContract() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_asset_contract",
-		Description: "Information on contracts for a specific Asset",
+		Description: "Obtain information on Contracts for a specific Asset",
 		List: &plugin.ListConfig{
 			Hydrate:    listAssetContracts,
 			KeyColumns: plugin.SingleColumn("asset_display_id"),
@@ -24,33 +24,33 @@ func assetContractColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "asset_display_id",
-			Description: "Display ID of the parent asset",
+			Description: "Display ID of the parent asset.",
 			Type:        proto.ColumnType_INT,
 			Transform:   transform.FromQual("asset_display_id"),
 		},
 		{
 			Name:        "id",
-			Description: "Contract ID specific to your account.",
+			Description: "ID of the contract specific to your account.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "contract_id",
-			Description: "Unique Contract Number",
+			Description: "Unique reference/contract number.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "contract_type",
-			Description: "Type of the Contract. (Example: Lease, Maintenance)",
+			Description: "Type of the contract. (Example: Lease, Maintenance)",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "contract_name",
-			Description: "Subject/Title of the Contract",
+			Description: "Subject/title of the contract.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "contract_status",
-			Description: "Status of the contract.(Example: Active, Draft)",
+			Description: "Status of the contract.",
 			Type:        proto.ColumnType_STRING,
 		},
 	}

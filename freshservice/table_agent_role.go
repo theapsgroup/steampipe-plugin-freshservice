@@ -11,7 +11,7 @@ import (
 func tableAgentRole() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_agent_role",
-		Description: "Obtain information about agent roles from the FreshService instance.",
+		Description: "Obtain information about Agent Roles from the FreshService instance.",
 		Columns:     agentRoleColumns(),
 		List: &plugin.ListConfig{
 			Hydrate: listAgentRoles,
@@ -27,32 +27,32 @@ func agentRoleColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the role",
+			Description: "ID of the role.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "name",
-			Description: "Name of the role",
+			Description: "Name of the role.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "description",
-			Description: "Description of the role",
+			Description: "Description of the role.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "default",
-			Description: "Set to true if it is a default role, and false otherwise",
+			Description: "True if it is a default role.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "created_at",
-			Description: "Date and time when the agent role was created",
+			Description: "Timestamp when the role was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Date and time when the agent role was last updated",
+			Description: "Timestamp when the role was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}
@@ -114,5 +114,6 @@ func listAgentRoles(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateD
 
 		filter.Page += 1
 	}
+
 	return nil, nil
 }
