@@ -34,7 +34,7 @@ func softwareUserColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the software-user combination.",
+			Description: "ID of the software-user combination.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -49,32 +49,32 @@ func softwareUserColumns() []*plugin.Column {
 		},
 		{
 			Name:        "allocated_date",
-			Description: "Date and time when the license was allocated.",
+			Description: "Timestamp when the license was allocated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "first_used",
-			Description: "Date and time when the software was first used by the user.",
+			Description: "Timestamp when the software was first used by the user.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "last_used",
-			Description: "Date and time when the software was last used by the user.",
+			Description: "Timestamp when the software was last used by the user.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "created_at",
-			Description: "Date and time when the installation was created.",
+			Description: "Timestamp when the installation was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Date and time when the installation was last updated.",
+			Description: "Timestamp when the installation was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "software_id",
-			Description: "Unique ID of the software this installation belong to.",
+			Description: "ID of the software this installation belong to.",
 			Type:        proto.ColumnType_INT,
 			Transform:   transform.FromQual("software_id"),
 		},

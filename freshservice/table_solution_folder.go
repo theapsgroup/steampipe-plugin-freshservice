@@ -29,7 +29,7 @@ func solutionFolderColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the solution folder.",
+			Description: "ID of the solution folder.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -49,12 +49,12 @@ func solutionFolderColumns() []*plugin.Column {
 		},
 		{
 			Name:        "default_category",
-			Description: "True if the solution folder is a default one.",
+			Description: "Set to true if the solution folder is the default one.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "category_id",
-			Description: "ID of the category under which the solution 90folder is listed.",
+			Description: "ID of the category under which the solution folder is listed.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -64,22 +64,22 @@ func solutionFolderColumns() []*plugin.Column {
 		},
 		{
 			Name:        "department_ids",
-			Description: "Array of Unique IDs of the departments to which this solution folder is visible.",
+			Description: "Array of IDs of the departments to which this solution folder is visible.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "group_ids",
-			Description: "Array of Unique IDs of the agent groups to which this solution folder is visible.",
+			Description: "Array of IDs of the agent groups to which this solution folder is visible.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "requester_group_ids",
-			Description: "Array of Unique IDs of requester groups to which this solution folder is visible.",
+			Description: "Array of IDs of requester groups to which this solution folder is visible.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "manage_by_group_ids",
-			Description: "Array of Unique IDs of groups which manage this solution folder.",
+			Description: "Array of IDs of groups which manage this solution folder.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{

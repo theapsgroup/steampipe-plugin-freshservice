@@ -26,7 +26,7 @@ func serviceColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the service item.",
+			Description: "ID of the service item.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -132,16 +132,16 @@ func serviceColumns() []*plugin.Column {
 		{
 			Name:        "cost",
 			Description: "Cost of the service item.",
-			Type:        proto.ColumnType_DOUBLE,
+			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "created_at",
-			Description: "The time at which the service item was created.",
+			Description: "Timestamp when the service item was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "The time at which the service item was updated.",
+			Description: "Timestamp when the service item was updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}

@@ -34,12 +34,12 @@ func releaseTimeEntryColumns() []*plugin.Column {
 		},
 		{
 			Name:        "start_time",
-			Description: "The time at which the time entry is added. If a timer, which is in stopped state, is started again, this holds date_time at which the timer is started again.",
+			Description: "Timestamp when the time entry is added. If a timer, which is in stopped state, is started again, this holds timestamp when the timer is started again.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "executed_at",
-			Description: "Time at which the timer is executed.",
+			Description: "Timestamp when the timer is executed.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
@@ -49,7 +49,7 @@ func releaseTimeEntryColumns() []*plugin.Column {
 		},
 		{
 			Name:        "billable",
-			Description: "Set as true if the time entry is billable.",
+			Description: "Set to true if the time entry is billable.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
@@ -64,7 +64,7 @@ func releaseTimeEntryColumns() []*plugin.Column {
 		},
 		{
 			Name:        "agent_id",
-			Description: "ID of the user/agent to whom this time entry is assigned.",
+			Description: "User ID of the agent to whom this time entry is assigned.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -74,17 +74,17 @@ func releaseTimeEntryColumns() []*plugin.Column {
 		},
 		{
 			Name:        "created_at",
-			Description: "Time at which this time entry is created.",
+			Description: "Timestamp when this time entry is created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Time at which the time entry is updated.",
+			Description: "Timestamp when the time entry is updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "release_id",
-			Description: "ID of the Release the time entry belongs to.",
+			Description: "ID of the release the time entry belongs to.",
 			Type:        proto.ColumnType_INT,
 			Transform:   transform.FromQual("release_id"),
 		},

@@ -1,6 +1,6 @@
 # Table: freshservice_problem
 
-Obtain information about Problems in the FreshService instance.
+Obtain information on Problems raised in the FreshService instance.
 
 ## Examples
 
@@ -22,4 +22,16 @@ from
   freshservice_problem
 where
   known_error = false;
+```
+
+### List problems assigned to a specific agent
+
+```sql
+select
+  id,
+  description
+from
+  freshservice_problem
+where
+  agent_id = 2578963125;
 ```

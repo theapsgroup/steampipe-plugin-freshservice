@@ -12,3 +12,14 @@ select
 from
   freshservice_service;
 ```
+### Get a specific service item by id
+
+```sql
+select
+  name,
+  short_description
+from
+  freshservice_service
+where
+  id = 27000112233;
+```

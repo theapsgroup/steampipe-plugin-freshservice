@@ -27,12 +27,12 @@ func productColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the product.",
+			Description: "ID of the product.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "name",
-			Description: "Name of the Product.",
+			Description: "Name of the product.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
@@ -72,12 +72,12 @@ func productColumns() []*plugin.Column {
 		},
 		{
 			Name:        "created_at",
-			Description: "Date and time when the product was created.",
+			Description: "Timestamp when the product was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Date and time when the product was last updated.",
+			Description: "Timestamp when the product was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}

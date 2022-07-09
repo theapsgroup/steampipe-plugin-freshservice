@@ -33,7 +33,7 @@ func solutionArticleColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the solution article.",
+			Description: "ID of the solution article.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -113,7 +113,7 @@ func solutionArticleColumns() []*plugin.Column {
 		},
 		{
 			Name:        "review_date",
-			Description: "Timestamp at which the solution article needs to be reviewed.",
+			Description: "Timestamp when the solution article needs to be reviewed.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{

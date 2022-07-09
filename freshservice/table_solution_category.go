@@ -29,7 +29,7 @@ func solutionCategoryColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the solution category.",
+			Description: "ID of the solution category.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -49,12 +49,12 @@ func solutionCategoryColumns() []*plugin.Column {
 		},
 		{
 			Name:        "default_category",
-			Description: "True if the solution category is a default one.",
+			Description: "Set to true if the solution category is the default one.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "visible_in_portals",
-			Description: "Array of Unique portal IDs where this category is visible.",
+			Description: "Array of portal IDs where this category is visible.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{

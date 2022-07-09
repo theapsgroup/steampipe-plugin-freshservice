@@ -42,7 +42,7 @@ func ticketColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the ticket.",
+			Description: "ID of the ticket.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -87,7 +87,7 @@ func ticketColumns() []*plugin.Column {
 		},
 		{
 			Name:        "status_desc",
-			Description: "Description of the Ticket Status.",
+			Description: "Description of the ticket status.",
 			Type:        proto.ColumnType_STRING,
 			Transform:   transform.FromField("Status").Transform(ticketStatusDesc),
 		},
@@ -98,13 +98,13 @@ func ticketColumns() []*plugin.Column {
 		},
 		{
 			Name:        "priority_desc",
-			Description: "Description of the Ticket Priority",
+			Description: "Description of the ticket priority",
 			Type:        proto.ColumnType_STRING,
 			Transform:   transform.FromField("Priority").Transform(ticketPriorityDesc),
 		},
 		{
 			Name:        "category",
-			Description: "Ticket Category.",
+			Description: "Ticket category.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -184,7 +184,7 @@ func ticketColumns() []*plugin.Column {
 		},
 		{
 			Name:        "tags",
-			Description: "Tags that have been associated with the ticket.",
+			Description: "Array of tags that have been associated with the ticket.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
@@ -194,12 +194,12 @@ func ticketColumns() []*plugin.Column {
 		},
 		{
 			Name:        "created_at",
-			Description: "Ticket creation timestamp.",
+			Description: "Timestamp when the ticket was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Ticket updated timestamp.",
+			Description: "Timestamp when the ticket was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}

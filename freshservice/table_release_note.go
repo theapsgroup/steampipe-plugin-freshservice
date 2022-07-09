@@ -29,12 +29,12 @@ func releaseNoteColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the Release note.",
+			Description: "ID of the release note.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "user_id",
-			Description: "ID of the user who created the note.",
+			Description: "User ID of who created the note.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -64,7 +64,7 @@ func releaseNoteColumns() []*plugin.Column {
 		},
 		{
 			Name:        "release_id",
-			Description: "Unique ID of the Release this note belongs to.",
+			Description: "ID of the release this note belongs to.",
 			Type:        proto.ColumnType_INT,
 			Transform:   transform.FromQual("release_id"),
 		},

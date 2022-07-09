@@ -20,7 +20,7 @@ select
   c.id,
   c.name,
   c.description,
-  c.contract_number
+  c.contract_number,
   v.name as vendor,
   c.start_date
 from

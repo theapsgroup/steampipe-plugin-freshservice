@@ -28,7 +28,7 @@ func problemColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the Problem.",
+			Description: "ID of the problem.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -63,7 +63,7 @@ func problemColumns() []*plugin.Column {
 		},
 		{
 			Name:        "priority_desc",
-			Description: "Description of the Problem Priority",
+			Description: "Description of the problems priority",
 			Type:        proto.ColumnType_STRING,
 			Transform:   transform.FromField("Priority").Transform(problemPriorityDesc),
 		},
@@ -74,7 +74,7 @@ func problemColumns() []*plugin.Column {
 		},
 		{
 			Name:        "status_desc",
-			Description: "Description of the Problem Status.",
+			Description: "Description of the problems status.",
 			Type:        proto.ColumnType_STRING,
 			Transform:   transform.FromField("Status").Transform(problemStatusDesc),
 		},
@@ -85,13 +85,13 @@ func problemColumns() []*plugin.Column {
 		},
 		{
 			Name:        "impact_desc",
-			Description: "Description of the Problem Impact.",
+			Description: "Description of the problems impact.",
 			Type:        proto.ColumnType_STRING,
 			Transform:   transform.FromField("Impact").Transform(problemImpactDesc),
 		},
 		{
 			Name:        "known_error",
-			Description: "States that the problem is known issue or not. true or false.",
+			Description: "Set to true if the problem is a known issue/problem/error.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
@@ -101,49 +101,49 @@ func problemColumns() []*plugin.Column {
 		},
 		{
 			Name:        "due_by",
-			Description: "Timestamp at which Problem due ends.",
+			Description: "Timestamp at which problem is due to be resolved by.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "department_id",
-			Description: "ID of the department initiating the Problem.",
+			Description: "ID of the department initiating the problem.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "category",
-			Description: "Category of the Problem.",
+			Description: "Category of the problem.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "sub_category",
-			Description: "Sub-category of the Problem.",
+			Description: "Sub-category of the problem.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "item_category",
-			Description: "Item of the Problem.",
+			Description: "Item category of the problem.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "associated_change",
-			Description: "ID of the Change associated with the Problem.",
+			Description: "ID of the change associated with the problem.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "problem_cause",
-			Description: "Cause of the Problem.",
+			Description: "Cause of the problem.",
 			Type:        proto.ColumnType_STRING,
 			Transform:   transform.FromField("AnalysisFields.ProblemCause.DescriptionText"),
 		},
 		{
 			Name:        "problem_symptom",
-			Description: "Symptom of the Problem.",
+			Description: "Symptom(s) of the problem.",
 			Type:        proto.ColumnType_STRING,
 			Transform:   transform.FromField("AnalysisFields.ProblemSymptom.DescriptionText"),
 		},
 		{
 			Name:        "problem_impact",
-			Description: "Impact of the Problem (textual description).",
+			Description: "Impact of the problem (textual description).",
 			Type:        proto.ColumnType_STRING,
 			Transform:   transform.FromField("AnalysisFields.ProblemImpact.DescriptionText"),
 		},

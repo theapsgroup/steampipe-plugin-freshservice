@@ -27,7 +27,7 @@ func purchaseOrderColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the purchase order.",
+			Description: "ID of the purchase order.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -37,12 +37,12 @@ func purchaseOrderColumns() []*plugin.Column {
 		},
 		{
 			Name:        "po_number",
-			Description: "Unique Purchase order number.",
+			Description: "Unique purchase order number.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "vendor_id",
-			Description: "Unique ID of the purchase order.",
+			Description: "ID of the vendor associated with the purchase order.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -52,7 +52,7 @@ func purchaseOrderColumns() []*plugin.Column {
 		},
 		{
 			Name:        "expected_delivery_date",
-			Description: "Expected delivery date of the purchase order.",
+			Description: "Timestamp when delivery is expected for the purchase order.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
@@ -72,17 +72,17 @@ func purchaseOrderColumns() []*plugin.Column {
 		},
 		{
 			Name:        "billing_same_as_shipping",
-			Description: "True if Billing address is same as Shipping address.",
+			Description: "Set to true if billing address is same as shipping address.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "created_by",
-			Description: "ID of the agent who created the purchase order.",
+			Description: "User ID of the agent who created the purchase order.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "department_id",
-			Description: "Unique ID of the department.",
+			Description: "ID of the department.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -117,12 +117,12 @@ func purchaseOrderColumns() []*plugin.Column {
 		},
 		{
 			Name:        "created_at",
-			Description: "Created date and time of the purchase order.",
+			Description: "Timestamp when the purchase order was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Updated date and time of the purchase order.",
+			Description: "Timestamp when the purchase order was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}

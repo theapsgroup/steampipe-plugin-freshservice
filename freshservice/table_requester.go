@@ -59,7 +59,7 @@ func requesterColumns() []*plugin.Column {
 		},
 		{
 			Name:        "secondary_emails",
-			Description: "Additional/secondary emails associated with the requester.",
+			Description: "Array of secondary emails associated with the requester.",
 			Type:        proto.ColumnType_JSON,
 			Transform:   transform.FromField("AdditionalEmails"),
 		},
@@ -75,12 +75,12 @@ func requesterColumns() []*plugin.Column {
 		},
 		{
 			Name:        "department_ids",
-			Description: "Array of Unique IDs of the departments associated with the requester.",
+			Description: "Array of IDs of the departments associated with the requester.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "active",
-			Description: "Indicates if the requester/user is active (enabled)",
+			Description: "Set to true if the requester is active (enabled)",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
@@ -95,7 +95,7 @@ func requesterColumns() []*plugin.Column {
 		},
 		{
 			Name:        "time_format",
-			Description: "Requesters chosen time format (12h or 24h)",
+			Description: "Chosen time format (12h or 24h) of the requester.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
@@ -110,7 +110,7 @@ func requesterColumns() []*plugin.Column {
 		},
 		{
 			Name:        "location_id",
-			Description: "Unique ID of the location associated with the requester.",
+			Description: "ID of the location associated with the requester.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -120,12 +120,12 @@ func requesterColumns() []*plugin.Column {
 		},
 		{
 			Name:        "has_logged_in",
-			Description: "Set to true if the user has logged in to Freshservice at least once, and false otherwise.",
+			Description: "Set to true if the requester has logged in to Freshservice at least once.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "is_agent",
-			Description: "Set to true if the user is also an agent.",
+			Description: "Set to true if the requester is also an agent.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{

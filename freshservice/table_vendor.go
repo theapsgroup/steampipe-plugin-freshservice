@@ -28,7 +28,7 @@ func vendorColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the vendor.",
+			Description: "ID of the vendor.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -66,7 +66,7 @@ func vendorColumns() []*plugin.Column {
 		},
 		{
 			Name:        "zipcode",
-			Description: "Zip/Postal Code of the location.",
+			Description: "Zip (postal) code of the location.",
 			Type:        proto.ColumnType_STRING,
 			Transform:   transform.FromField("Address.ZipCode"),
 		},

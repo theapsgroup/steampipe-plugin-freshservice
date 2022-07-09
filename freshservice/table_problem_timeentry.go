@@ -11,7 +11,7 @@ import (
 func tableProblemTimeEntry() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_problem_timeentry",
-		Description: "Obtain time entries for a specific Problem",
+		Description: "Obtain time entries for a specific Problem in the FreshService instance.",
 		List: &plugin.ListConfig{
 			Hydrate: listProblemTimeEntries,
 			KeyColumns: []*plugin.KeyColumn{
@@ -34,12 +34,12 @@ func problemTimeEntryColumns() []*plugin.Column {
 		},
 		{
 			Name:        "start_time",
-			Description: "The time at which the time entry is added. If a timer, which is in stopped state, is started again, this holds date_time at which the timer is started again.",
+			Description: "Timestamp when the time entry is added. If a timer, which is in stopped state, is started again, this holds date_time at which the timer is started again.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "executed_at",
-			Description: "Time at which the timer is executed.",
+			Description: "Timestamp when the timer is executed.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
@@ -54,17 +54,17 @@ func problemTimeEntryColumns() []*plugin.Column {
 		},
 		{
 			Name:        "time_spent",
-			Description: "The total amount of time spent by the timer in hh::mm format. This field cannot be set if timer_running is true.",
+			Description: "The total amount of time spent by the timer in hh::mm format.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "task_id",
-			Description: "ID of the task assigned to the time entry.",
+			Description: "ID of the task associated with the time entry.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "agent_id",
-			Description: "ID of the user/agent to whom this time entry is assigned.",
+			Description: "User ID of the agent to whom this time entry is assigned.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -74,17 +74,17 @@ func problemTimeEntryColumns() []*plugin.Column {
 		},
 		{
 			Name:        "created_at",
-			Description: "Time at which this time entry is created.",
+			Description: "Timestamp when the time entry is created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Time at which the time entry is updated.",
+			Description: "Timestamp when the time entry was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "problem_id",
-			Description: "ID of the Problem the time entry belongs to.",
+			Description: "ID of the problem the time entry belongs to.",
 			Type:        proto.ColumnType_INT,
 			Transform:   transform.FromQual("problem_id"),
 		},

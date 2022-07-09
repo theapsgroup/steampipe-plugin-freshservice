@@ -1,6 +1,6 @@
 # Table: freshservice_problem_timeentry
 
-Allows for obtaining information on time entries associated to a specific Problem.
+Obtain time entries for a specific Problem in the FreshService instance.
 
 You **MUST** specify a `problem_id` in the `WHERE` or `JOIN` clause.
 
