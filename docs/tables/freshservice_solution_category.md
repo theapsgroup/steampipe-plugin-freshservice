@@ -15,8 +15,6 @@ from
 
 ### Get a specific solution category
 
-### List all solution categories
-
 ```sql
 select
   *
