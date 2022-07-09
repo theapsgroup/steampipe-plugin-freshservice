@@ -28,7 +28,7 @@ func vendorColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the vendor.",
+			Description: "ID of the vendor.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -66,7 +66,7 @@ func vendorColumns() []*plugin.Column {
 		},
 		{
 			Name:        "zipcode",
-			Description: "Zip/Postal Code of the location.",
+			Description: "Zip (postal) code of the location.",
 			Type:        proto.ColumnType_STRING,
 			Transform:   transform.FromField("Address.ZipCode"),
 		},
@@ -95,11 +95,13 @@ func getVendor(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) 
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_vendor.getVendor", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	vendor, _, err := client.Vendors.GetVendor(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_vendor.getVendor", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain vendor with id %d: %v", id, err)
 	}
 
@@ -109,6 +111,7 @@ func getVendor(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) 
 func listVendors(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_vendor.listVendors", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -119,9 +122,17 @@ func listVendors(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		vendors, res, err := client.Vendors.ListVendors(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_vendor.listVendors", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain vendors: %v", err)
 		}
 

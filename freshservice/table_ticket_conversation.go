@@ -34,7 +34,7 @@ func ticketConversationColumns() []*plugin.Column {
 		},
 		{
 			Name:        "user_id",
-			Description: "ID of the agent/user who is adding the conversation.",
+			Description: "User ID of the agent or requester who is adding the conversation.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -69,27 +69,27 @@ func ticketConversationColumns() []*plugin.Column {
 		},
 		{
 			Name:        "ticket_id",
-			Description: "Unique ID of the ticket to which this conversation belongs.",
+			Description: "ID of the ticket to which this conversation belongs.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "to_emails",
-			Description: "Email addresses of agents/users who need to be notified about this conversation.",
+			Description: "Email addresses of agents/requesters who need to be notified about this conversation.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "attachments",
-			Description: "Attachments associated with the conversation..",
+			Description: "Attachments associated with the conversation.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "created_at",
-			Description: "Conversation creation timestamp.",
+			Description: "Timestamp when the conversation was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Conversation updated timestamp.",
+			Description: "Timestamp when the conversation was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}
@@ -101,6 +101,7 @@ func listTicketConversations(ctx context.Context, d *plugin.QueryData, h *plugin
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_ticket_conversation.listTicketConversations", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -111,9 +112,17 @@ func listTicketConversations(ctx context.Context, d *plugin.QueryData, h *plugin
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		conversations, res, err := client.Tickets.ListConversations(ticketId, &filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_ticket_conversation.listTicketConversations", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain conversations: %v", err)
 		}
 

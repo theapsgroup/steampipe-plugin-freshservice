@@ -11,7 +11,7 @@ import (
 func tableAgentRole() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_agent_role",
-		Description: "",
+		Description: "Obtain information about Agent Roles from the FreshService instance.",
 		Columns:     agentRoleColumns(),
 		List: &plugin.ListConfig{
 			Hydrate: listAgentRoles,
@@ -27,32 +27,32 @@ func agentRoleColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the role",
+			Description: "ID of the role.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "name",
-			Description: "Name of the role",
+			Description: "Name of the role.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "description",
-			Description: "Description of the role",
+			Description: "Description of the role.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "default",
-			Description: "Set to true if it is a default role, and false otherwise",
+			Description: "True if it is a default role.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "created_at",
-			Description: "Date and time when the agent role was created",
+			Description: "Timestamp when the role was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Date and time when the agent role was last updated",
+			Description: "Timestamp when the role was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}
@@ -63,11 +63,13 @@ func getAgentRole(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_agent_role.getAgentRole", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	role, _, err := client.Agents.GetAgentRole(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_agent_role.getAgentRole", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain agent role with id %d: %v", id, err)
 	}
 
@@ -77,21 +79,28 @@ func getAgentRole(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 func listAgentRoles(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_agent_role.listAgentRoles", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
-	lo := fs.ListOptions{
-		Page:    1,
-		PerPage: 30,
+	filter := fs.ListAgentRolesOptions{
+		ListOptions: fs.ListOptions{
+			Page:    1,
+			PerPage: 30,
+		},
 	}
 
-	filter := fs.ListAgentRolesOptions{
-		ListOptions: lo,
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
 	}
 
 	for {
 		roles, res, err := client.Agents.ListAgentRoles(filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_agent_role.listAgentRoles", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain agent roles: %v", err)
 		}
 
@@ -105,5 +114,6 @@ func listAgentRoles(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateD
 
 		filter.Page += 1
 	}
+
 	return nil, nil
 }

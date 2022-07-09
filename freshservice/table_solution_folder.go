@@ -29,7 +29,7 @@ func solutionFolderColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the solution folder.",
+			Description: "ID of the solution folder.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -49,12 +49,12 @@ func solutionFolderColumns() []*plugin.Column {
 		},
 		{
 			Name:        "default_category",
-			Description: "True if the solution folder is a default one.",
+			Description: "Set to true if the solution folder is the default one.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "category_id",
-			Description: "ID of the category under which the solution 90folder is listed.",
+			Description: "ID of the category under which the solution folder is listed.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -64,22 +64,22 @@ func solutionFolderColumns() []*plugin.Column {
 		},
 		{
 			Name:        "department_ids",
-			Description: "Array of Unique IDs of the departments to which this solution folder is visible.",
+			Description: "Array of IDs of the departments to which this solution folder is visible.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "group_ids",
-			Description: "Array of Unique IDs of the agent groups to which this solution folder is visible.",
+			Description: "Array of IDs of the agent groups to which this solution folder is visible.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "requester_group_ids",
-			Description: "Array of Unique IDs of requester groups to which this solution folder is visible.",
+			Description: "Array of IDs of requester groups to which this solution folder is visible.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "manage_by_group_ids",
-			Description: "Array of Unique IDs of groups which manage this solution folder.",
+			Description: "Array of IDs of groups which manage this solution folder.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
@@ -99,6 +99,7 @@ func solutionFolderColumns() []*plugin.Column {
 func listSolutionFolders(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_solution_folder.listSolutionFolders", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -116,6 +117,7 @@ func listSolutionFolders(ctx context.Context, d *plugin.QueryData, h *plugin.Hyd
 
 		folder, _, err := client.Solutions.GetSolutionFolder(folderId)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_solution_folder.listSolutionFolders", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain solution folder with id %d: %v", folderId, err)
 		}
 
@@ -124,6 +126,7 @@ func listSolutionFolders(ctx context.Context, d *plugin.QueryData, h *plugin.Hyd
 		for {
 			folders, res, err := client.Solutions.ListSolutionFolders(&filter)
 			if err != nil {
+				plugin.Logger(ctx).Error("freshservice_solution_folder.listSolutionFolders", "query_error", err)
 				return nil, fmt.Errorf("unable to obtain solution folders: %v", err)
 			}
 

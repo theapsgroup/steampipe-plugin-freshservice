@@ -1,6 +1,6 @@
 # Table: freshservice_announcement
 
-Obtain information about the Announcements sent to Requesters from Agents.
+Obtain information about Announcements from the FreshService instance.
 
 ## Examples
 

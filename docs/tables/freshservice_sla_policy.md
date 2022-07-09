@@ -12,3 +12,20 @@ select
 from
   freshservice_sla_policy;
 ```
+
+### Get default SLA Policies
+
+```sql
+select
+  id,
+  name,
+  active,
+  deleted,
+  category,
+  sub_category,
+  item_category
+from
+  freshservice_sla_policy
+where
+  is_default = true;
+```

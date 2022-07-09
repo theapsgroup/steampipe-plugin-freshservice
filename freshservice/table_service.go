@@ -26,7 +26,7 @@ func serviceColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the service item.",
+			Description: "ID of the service item.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -132,28 +132,20 @@ func serviceColumns() []*plugin.Column {
 		{
 			Name:        "cost",
 			Description: "Cost of the service item.",
-			Type:        proto.ColumnType_DOUBLE,
+			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "created_at",
-			Description: "The time at which the service item was created.",
+			Description: "Timestamp when the service item was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "The time at which the service item was updated.",
+			Description: "Timestamp when the service item was updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}
 }
-
-/*
-type ServiceItem struct {
-	Cost                   float32   `json:"cost"`
-	CreatedAt              time.Time `json:"created_at"`
-	UpdatedAt              time.Time `json:"updated_at"`
-}
-*/
 
 // Hydrate Functions
 func getServiceItem(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
@@ -161,11 +153,13 @@ func getServiceItem(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateD
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_service.getServiceItem", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	service, _, err := client.Services.GetServiceItem(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_service.getServiceItem", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain service item with id %d: %v", id, err)
 	}
 
@@ -175,12 +169,14 @@ func getServiceItem(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateD
 func listServiceItems(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_service.listServiceItems", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	// Note: List operation returns all results without pagination.
 	serviceItems, _, err := client.Services.ListServiceItems()
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_service.listServiceItems", "connection_error", err)
 		return nil, fmt.Errorf("unable to obtain service items: %v", err)
 	}
 

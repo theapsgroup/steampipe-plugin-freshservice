@@ -11,7 +11,7 @@ import (
 func tableBusinessHour() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_business_hour",
-		Description: "Retrieve Business Hours configuration of the FreshService instance.",
+		Description: "Obtain the Business Hours configurations from the FreshService instance.",
 		List: &plugin.ListConfig{
 			Hydrate: listBusinessHours,
 		},
@@ -27,7 +27,7 @@ func businessHoursColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the business hours configuration.",
+			Description: "ID of the business hours configuration.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -47,7 +47,7 @@ func businessHoursColumns() []*plugin.Column {
 		},
 		{
 			Name:        "time_zone",
-			Description: "Time zone that the business hours configuration functions in",
+			Description: "Time zone that the business hours configuration functions in.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
@@ -62,12 +62,12 @@ func businessHoursColumns() []*plugin.Column {
 		},
 		{
 			Name:        "created_at",
-			Description: "Date and time when the business hours configuration was created.",
+			Description: "Timestamp when the business hours configuration were created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Date and time when the business hours configuration was updated.",
+			Description: "Timestamp when the business hours configuration were last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}
@@ -79,11 +79,13 @@ func getBusinessHours(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_business_hour.getBusinessHours", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	bh, _, err := client.BusinessHours.GetBusinessHours(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_business_hour.getBusinessHours", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain business hours configuration with id %d: %v", id, err)
 	}
 
@@ -93,6 +95,7 @@ func getBusinessHours(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 func listBusinessHours(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_business_hour.listBusinessHours", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -103,9 +106,17 @@ func listBusinessHours(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		bhs, res, err := client.BusinessHours.ListBusinessHours(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_business_hour.listBusinessHours", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain business hours configurations: %v", err)
 		}
 

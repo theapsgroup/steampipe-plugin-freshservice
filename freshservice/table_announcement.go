@@ -11,7 +11,7 @@ import (
 func tableAnnouncement() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_announcement",
-		Description: "FreshService Announcements",
+		Description: "Obtain information about Announcements from the FreshService instance.",
 		List: &plugin.ListConfig{
 			Hydrate: listAnnouncements,
 			KeyColumns: []*plugin.KeyColumn{
@@ -33,82 +33,82 @@ func announcementColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique identifier of the Announcement",
+			Description: "ID of the announcement.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "created_by",
-			Description: "Unique identifier of the agent that created this Announcement",
+			Description: "ID of the agent that created this announcement.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "state",
-			Description: "State of the Announcement - active, archived, scheduled",
+			Description: "State of the announcement - (active, archived, scheduled).",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "title",
-			Description: "Title of the Announcement",
+			Description: "Title of the announcement.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "body",
-			Description: "Body of the Announcement",
+			Description: "Body of the announcement.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "body_html",
-			Description: "Body of the Announcement in HTML format",
+			Description: "Body of the announcement in HTML format.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "visible_from",
-			Description: "Timestamp at which Announcement becomes active",
+			Description: "Timestamp at which the announcement becomes active.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "visible_to",
-			Description: "Timestamp until which Announcement is active",
+			Description: "Timestamp until the announcement is active.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "visibility",
-			Description: "Who can see the announcement? Values - everyone, agents_only, agents_and_groups",
+			Description: "Visibility of the announcement - (everyone, agents_only, agents_and_groups).",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "departments",
-			Description: "Array of Department IDs that can view this Announcement",
+			Description: "Array of Department IDs that can view this announcement.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "groups",
-			Description: "Array of Group IDs that can view this Announcement",
+			Description: "Array of Group IDs that can view this announcement.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "is_read",
-			Description: "True if the logged-in-user has read the announcement",
+			Description: "True if the logged-in-user has read the announcement.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "send_email",
-			Description: "True if the announcement needs to be sent via email as well. False, otherwise",
+			Description: "True if the announcement needs to be sent via email.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "additional_emails",
-			Description: "Additional email addresses to which the announcement needs to be sent",
+			Description: "Array of additional email addresses to which the announcement needs to be sent.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "created_at",
-			Description: "Announcement creation timestamp",
+			Description: "Timestamp when the announcement was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Announcement updated timestamp",
+			Description: "Timestamp when the announcement was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}
@@ -120,11 +120,13 @@ func getAnnouncement(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrate
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_announcement.getAnnouncement", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	announcement, _, err := client.Announcements.GetAnnouncement(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_announcement.getAnnouncement", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain announcement with id %d: %v", id, err)
 	}
 
@@ -134,6 +136,7 @@ func getAnnouncement(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrate
 func listAnnouncements(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_announcement.listAnnouncements", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -144,6 +147,13 @@ func listAnnouncements(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	q := d.KeyColumnQuals
 	if q["state"] != nil {
 		filter.State = q["state"].GetStringValue()
@@ -152,6 +162,7 @@ func listAnnouncements(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 	for {
 		announcements, res, err := client.Announcements.ListAnnouncements(filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_announcement.listAnnouncements", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain announcements: %v", err)
 		}
 

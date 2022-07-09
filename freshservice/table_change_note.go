@@ -11,7 +11,7 @@ import (
 func tableChangeNote() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_change_note",
-		Description: "Obtain notes for a specific Change in the FreshService Instance.",
+		Description: "Obtain information about Notes attached to Changes in the FreshService instance.",
 		List: &plugin.ListConfig{
 			Hydrate: listChangeNotes,
 			KeyColumns: []*plugin.KeyColumn{
@@ -29,12 +29,12 @@ func changeNoteColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the change note.",
+			Description: "ID of the change note.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "user_id",
-			Description: "ID of the user who created the note.",
+			Description: "User ID of the user who created the note.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -49,7 +49,7 @@ func changeNoteColumns() []*plugin.Column {
 		},
 		{
 			Name:        "notify_emails",
-			Description: "Array of addresses to which notifications are sent.",
+			Description: "Array of email addresses to which notifications are sent.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
@@ -64,7 +64,7 @@ func changeNoteColumns() []*plugin.Column {
 		},
 		{
 			Name:        "change_id",
-			Description: "Unique ID of the Change this note belongs to.",
+			Description: "ID of the Change this note belongs to.",
 			Type:        proto.ColumnType_INT,
 			Transform:   transform.FromQual("change_id"),
 		},
@@ -77,11 +77,13 @@ func listChangeNotes(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrate
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_change_note.listChangeNotes", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	notes, _, err := client.Changes.ListChangeNotes(changeId)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_change_note.listChangeNotes", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain change notes: %v", err)
 	}
 

@@ -59,7 +59,7 @@ func requesterColumns() []*plugin.Column {
 		},
 		{
 			Name:        "secondary_emails",
-			Description: "Additional/secondary emails associated with the requester.",
+			Description: "Array of secondary emails associated with the requester.",
 			Type:        proto.ColumnType_JSON,
 			Transform:   transform.FromField("AdditionalEmails"),
 		},
@@ -75,12 +75,12 @@ func requesterColumns() []*plugin.Column {
 		},
 		{
 			Name:        "department_ids",
-			Description: "Array of Unique IDs of the departments associated with the requester.",
+			Description: "Array of IDs of the departments associated with the requester.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "active",
-			Description: "Indicates if the requester/user is active (enabled)",
+			Description: "Set to true if the requester is active (enabled)",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
@@ -95,7 +95,7 @@ func requesterColumns() []*plugin.Column {
 		},
 		{
 			Name:        "time_format",
-			Description: "Requesters chosen time format (12h or 24h)",
+			Description: "Chosen time format (12h or 24h) of the requester.",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
@@ -110,7 +110,7 @@ func requesterColumns() []*plugin.Column {
 		},
 		{
 			Name:        "location_id",
-			Description: "Unique ID of the location associated with the requester.",
+			Description: "ID of the location associated with the requester.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -120,12 +120,12 @@ func requesterColumns() []*plugin.Column {
 		},
 		{
 			Name:        "has_logged_in",
-			Description: "Set to true if the user has logged in to Freshservice at least once, and false otherwise.",
+			Description: "Set to true if the requester has logged in to Freshservice at least once.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "is_agent",
-			Description: "Set to true if the user is also an agent.",
+			Description: "Set to true if the requester is also an agent.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
@@ -147,11 +147,13 @@ func getRequester(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_requester.getRequester", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	requester, _, err := client.Requesters.GetRequester(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_requester.getRequester", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain requester with id %d: %v", id, err)
 	}
 
@@ -161,6 +163,7 @@ func getRequester(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDat
 func listRequesters(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_requester.listRequesters", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -174,6 +177,13 @@ func listRequesters(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateD
 		IncludeAgents: &ia,
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	if q["email"] != nil {
 		e := q["email"].GetStringValue()
 		filter.Email = &e
@@ -182,6 +192,7 @@ func listRequesters(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateD
 	for {
 		users, res, err := client.Requesters.ListRequesters(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_requester.listRequesters", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain requesters: %v", err)
 		}
 

@@ -30,7 +30,7 @@ func releaseTaskColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the task.",
+			Description: "ID of the task.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -45,7 +45,7 @@ func releaseTaskColumns() []*plugin.Column {
 		},
 		{
 			Name:        "status_desc",
-			Description: "Description of the Task Status.",
+			Description: "Description of the task status.",
 			Type:        proto.ColumnType_STRING,
 			Transform:   transform.FromField("Status").Transform(taskStatusDesc),
 		},
@@ -71,27 +71,27 @@ func releaseTaskColumns() []*plugin.Column {
 		},
 		{
 			Name:        "group_id",
-			Description: "Unique ID of the group to which the task is assigned.",
+			Description: "ID of the group to which the task is assigned.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "created_at",
-			Description: "Timestamp at which the task was created.",
+			Description: "Timestamp when the task was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Timestamp at which the task was updated.",
+			Description: "Timestamp when the task was updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "closed_at",
-			Description: "Timestamp at which the task was closed.",
+			Description: "Timestamp when the task was closed.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "release_id",
-			Description: "Unique ID of the Release the task belongs to.",
+			Description: "ID of the release the task belongs to.",
 			Type:        proto.ColumnType_INT,
 			Transform:   transform.FromQual("release_id"),
 		},
@@ -104,6 +104,7 @@ func listReleaseTasks(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_release_task.listReleaseTasks", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -114,9 +115,17 @@ func listReleaseTasks(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		tasks, res, err := client.Releases.ListTasks(releaseId, &filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_release_task.listReleaseTasks", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain tasks: %v", err)
 		}
 

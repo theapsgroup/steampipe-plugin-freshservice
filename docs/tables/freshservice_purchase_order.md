@@ -13,3 +13,13 @@ from
   freshservice_purchase_order;
 ```
 
+### List purchase orders from a specific vendor
+
+```sql
+select
+  *
+from
+  freshservice_purchase_order
+where
+  vendor_id = 20591913;
+```

@@ -1,6 +1,6 @@
 # Table: freshservice_agent
 
-Obtain information about Agents from your FreshService instance.
+Obtain information about Agents (operators) of the FreshService instance.
 
 ## Examples
 

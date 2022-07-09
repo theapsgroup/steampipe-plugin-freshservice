@@ -1,6 +1,6 @@
 # Table: freshservice_location
 
-Obtain information on Locations in the FreshService instance.
+Obtain information on locations registered in the FreshService Instance.
 
 ## Examples
 

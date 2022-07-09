@@ -12,7 +12,7 @@ import (
 func tableProblemTask() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_problem_task",
-		Description: "Obtain tasks based on an associated Problem",
+		Description: "Obtain tasks based on an associated Problem in the FreshService instance.",
 		List: &plugin.ListConfig{
 			Hydrate: listProblemTasks,
 			KeyColumns: []*plugin.KeyColumn{
@@ -30,12 +30,12 @@ func problemTaskColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the task.",
+			Description: "ID of the task.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "agent_id",
-			Description: "ID of the agent to whom the task is assigned",
+			Description: "User ID of the agent to whom the task is assigned",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -45,7 +45,7 @@ func problemTaskColumns() []*plugin.Column {
 		},
 		{
 			Name:        "status_desc",
-			Description: "Description of the Task Status.",
+			Description: "Description of the task status.",
 			Type:        proto.ColumnType_STRING,
 			Transform:   transform.FromField("Status").Transform(taskStatusDesc),
 		},
@@ -71,7 +71,7 @@ func problemTaskColumns() []*plugin.Column {
 		},
 		{
 			Name:        "group_id",
-			Description: "Unique ID of the group to which the task is assigned.",
+			Description: "ID of the group to which the task is assigned.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -81,7 +81,7 @@ func problemTaskColumns() []*plugin.Column {
 		},
 		{
 			Name:        "updated_at",
-			Description: "Timestamp at which the task was updated.",
+			Description: "Timestamp at which the task was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
@@ -91,7 +91,7 @@ func problemTaskColumns() []*plugin.Column {
 		},
 		{
 			Name:        "problem_id",
-			Description: "Unique ID of the Problem the task belongs to.",
+			Description: "ID of the problem the task belongs to.",
 			Type:        proto.ColumnType_INT,
 			Transform:   transform.FromQual("problem_id"),
 		},
@@ -104,6 +104,7 @@ func listProblemTasks(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_problem_task.listProblemTasks", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -114,9 +115,17 @@ func listProblemTasks(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		tasks, res, err := client.Problems.ListTasks(problemId, &filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_problem_task.listProblemTasks", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain tasks: %v", err)
 		}
 

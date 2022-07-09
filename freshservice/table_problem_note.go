@@ -29,12 +29,12 @@ func problemNoteColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the problem note.",
+			Description: "ID of the problem note.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "user_id",
-			Description: "ID of the user who created the note.",
+			Description: "User ID of the user who created the note.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -59,12 +59,12 @@ func problemNoteColumns() []*plugin.Column {
 		},
 		{
 			Name:        "updated_at",
-			Description: "Timestamp at which the note was updated.",
+			Description: "Timestamp at which the note was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "problem_id",
-			Description: "Unique ID of the Problem this note belongs to.",
+			Description: "ID of the problem this note belongs to.",
 			Type:        proto.ColumnType_INT,
 			Transform:   transform.FromQual("problem_id"),
 		},
@@ -77,11 +77,13 @@ func listProblemNotes(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_problem_note.listProblemNotes", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	notes, _, err := client.Problems.ListProblemNotes(problemId)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_problem_note.listProblemNotes", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain problem notes: %v", err)
 	}
 

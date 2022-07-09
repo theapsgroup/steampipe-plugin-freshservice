@@ -11,7 +11,7 @@ import (
 func tableAssetComponent() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_asset_component",
-		Description: "Information about the Components of a specific Asset.",
+		Description: "Obtain information about the Components of a specific Asset.",
 		List: &plugin.ListConfig{
 			Hydrate:    listAssetComponents,
 			KeyColumns: plugin.SingleColumn("asset_display_id"),
@@ -30,27 +30,27 @@ func assetComponentColumns() []*plugin.Column {
 		},
 		{
 			Name:        "id",
-			Description: "Unique ID of the component.",
+			Description: "ID of the component.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "component_type",
-			Description: "Type of the Component. (Example: Processor, Memory)",
+			Description: "Type of the component. (Example: Processor, Memory)",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "component_data",
-			Description: "Details of the Component.",
+			Description: "Details of the component.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
 			Name:        "created_at",
-			Description: "Date and time when the component was created.",
+			Description: "Timestamp when the component was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Date and time when the component was updated.",
+			Description: "Timestamp when the component was updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}
@@ -62,16 +62,20 @@ func listAssetComponents(ctx context.Context, d *plugin.QueryData, h *plugin.Hyd
 	displayId := int(q["asset_display_id"].GetInt64Value())
 
 	if displayId == 0 {
-		return nil, fmt.Errorf("freshservice_asset_component List call requires an '=' qualifier for 'asset_display_id'")
+		err := fmt.Errorf("freshservice_asset_component List call requires an '=' qualifier for 'asset_display_id'")
+		plugin.Logger(ctx).Error("freshservice_asset_component.listAssetComponents", "missing_qualifier_error", err)
+		return nil, err
 	}
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_asset_component.listAssetComponents", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	components, _, err := client.Assets.ListAssetComponents(displayId)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_asset_component.listAssetComponents", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain asset components: %v", err)
 	}
 

@@ -11,7 +11,7 @@ import (
 func tableAsset() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_asset",
-		Description: "Information about Assets stored within the FreshService instance.",
+		Description: "Obtain information about Assets stored within the FreshService instance.",
 		List: &plugin.ListConfig{
 			Hydrate: listAssets,
 		},
@@ -27,7 +27,7 @@ func assetColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the asset.",
+			Description: "ID of the asset.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -62,22 +62,22 @@ func assetColumns() []*plugin.Column {
 		},
 		{
 			Name:        "author_type",
-			Description: "Indicates whether the asset was created by a user or discovery tools (Probe or Agent).",
+			Description: "Indicates whether the asset was created by a user or discovery tools - (Probe, Agent).",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "usage_type",
-			Description: "Usage type of the asset (Loaner / Permanent).",
+			Description: "Usage type of the asset - (Loaner, Permanent).",
 			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "user_id",
-			Description: "ID of the associated user (Used By).",
+			Description: "ID of the user using/associated to the asset.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "location_id",
-			Description: "ID of the associated location.",
+			Description: "ID of the assets associated location.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -87,27 +87,27 @@ func assetColumns() []*plugin.Column {
 		},
 		{
 			Name:        "agent_id",
-			Description: "ID of the associated agent (Managed By).",
+			Description: "ID of the associated agent.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "group_id",
-			Description: "ID of the associated agent group (Managed By Group).",
+			Description: "ID of the associated agent group.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
 			Name:        "assigned_on",
-			Description: "Date and time when the asset was assigned.",
+			Description: "Timestamp when the asset was assigned.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "created_at",
-			Description: "Date and time when the asset was created.",
+			Description: "Timestamp when the asset was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Date and time when the asset was updated.",
+			Description: "Timestamp when the asset was updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}
@@ -119,11 +119,13 @@ func getAsset(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_asset.getAsset", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	asset, _, err := client.Assets.GetAsset(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_asset.getAsset", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain asset with display_id %d: %v", id, err)
 	}
 
@@ -133,6 +135,7 @@ func getAsset(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (
 func listAssets(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_asset.listAssets", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -143,9 +146,17 @@ func listAssets(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		agents, res, err := client.Assets.ListAssets(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_asset.listAssets", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain assets: %v", err)
 		}
 

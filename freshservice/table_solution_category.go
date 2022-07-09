@@ -29,7 +29,7 @@ func solutionCategoryColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the solution category.",
+			Description: "ID of the solution category.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -49,12 +49,12 @@ func solutionCategoryColumns() []*plugin.Column {
 		},
 		{
 			Name:        "default_category",
-			Description: "True if the solution category is a default one.",
+			Description: "Set to true if the solution category is the default one.",
 			Type:        proto.ColumnType_BOOL,
 		},
 		{
 			Name:        "visible_in_portals",
-			Description: "Array of Unique portal IDs where this category is visible.",
+			Description: "Array of portal IDs where this category is visible.",
 			Type:        proto.ColumnType_JSON,
 		},
 		{
@@ -74,6 +74,7 @@ func solutionCategoryColumns() []*plugin.Column {
 func listSolutionCategories(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_solution_category.listSolutionCategories", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -84,6 +85,13 @@ func listSolutionCategories(ctx context.Context, d *plugin.QueryData, h *plugin.
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	q := d.KeyColumnQuals
 
 	if q["id"] != nil {
@@ -91,6 +99,7 @@ func listSolutionCategories(ctx context.Context, d *plugin.QueryData, h *plugin.
 
 		category, _, err := client.Solutions.GetSolutionCategory(catId)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_solution_category.listSolutionCategories", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain solution category with id %d: %v", catId, err)
 		}
 
@@ -99,6 +108,7 @@ func listSolutionCategories(ctx context.Context, d *plugin.QueryData, h *plugin.
 		for {
 			categories, res, err := client.Solutions.ListSolutionCategories(&filter)
 			if err != nil {
+				plugin.Logger(ctx).Error("freshservice_solution_category.listSolutionCategories", "query_error", err)
 				return nil, fmt.Errorf("unable to obtain solution categories: %v", err)
 			}
 

@@ -12,7 +12,7 @@ import (
 func tableLocation() *plugin.Table {
 	return &plugin.Table{
 		Name:        "freshservice_location",
-		Description: "Information about locations stored in FreshService",
+		Description: "Obtain information on locations registered in the FreshService Instance.",
 		List: &plugin.ListConfig{
 			Hydrate: listLocations,
 		},
@@ -28,7 +28,7 @@ func locationColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the location.",
+			Description: "ID of the location.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -72,7 +72,7 @@ func locationColumns() []*plugin.Column {
 		},
 		{
 			Name:        "zipcode",
-			Description: "Zip/Postal Code of the location.",
+			Description: "Zip/Postal code of the location.",
 			Type:        proto.ColumnType_STRING,
 			Transform:   transform.FromField("Address.ZipCode"),
 		},
@@ -84,12 +84,12 @@ func locationColumns() []*plugin.Column {
 		},
 		{
 			Name:        "created_at",
-			Description: "Date and time when the location was created.",
+			Description: "Timestamp when the location was created.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
 			Name:        "updated_at",
-			Description: "Date and time when the location was last updated.",
+			Description: "Timestamp when the location was last updated.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 	}
@@ -101,11 +101,13 @@ func getLocation(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_location.getLocation", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	location, _, err := client.Locations.GetLocation(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_location.getLocation", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain location with id %d: %v", id, err)
 	}
 
@@ -115,6 +117,7 @@ func getLocation(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData
 func listLocations(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_location.listLocations", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -125,9 +128,17 @@ func listLocations(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDa
 		},
 	}
 
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
+	}
+
 	for {
 		locations, res, err := client.Locations.ListLocations(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_location.listLocations", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain asset types: %v", err)
 		}
 

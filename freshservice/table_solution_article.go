@@ -33,7 +33,7 @@ func solutionArticleColumns() []*plugin.Column {
 	return []*plugin.Column{
 		{
 			Name:        "id",
-			Description: "Unique ID of the solution article.",
+			Description: "ID of the solution article.",
 			Type:        proto.ColumnType_INT,
 		},
 		{
@@ -113,7 +113,7 @@ func solutionArticleColumns() []*plugin.Column {
 		},
 		{
 			Name:        "review_date",
-			Description: "Timestamp at which the solution article needs to be reviewed.",
+			Description: "Timestamp when the solution article needs to be reviewed.",
 			Type:        proto.ColumnType_TIMESTAMP,
 		},
 		{
@@ -135,11 +135,13 @@ func getSolutionArticle(ctx context.Context, d *plugin.QueryData, h *plugin.Hydr
 
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_solution_article.getSolutionArticle", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
 	article, _, err := client.Solutions.GetSolutionArticle(id)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_solution_article.getSolutionArticle", "query_error", err)
 		return nil, fmt.Errorf("unable to obtain solution article with id %d: %v", id, err)
 	}
 
@@ -149,6 +151,7 @@ func getSolutionArticle(ctx context.Context, d *plugin.QueryData, h *plugin.Hydr
 func listSolutionArticles(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	client, err := connect(ctx, d)
 	if err != nil {
+		plugin.Logger(ctx).Error("freshservice_solution_article.listSolutionArticles", "connection_error", err)
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
@@ -157,6 +160,13 @@ func listSolutionArticles(ctx context.Context, d *plugin.QueryData, h *plugin.Hy
 			Page:    1,
 			PerPage: 30,
 		},
+	}
+
+	limit := d.QueryContext.Limit
+	if limit != nil {
+		if *limit < int64(30) {
+			filter.PerPage = int(*limit)
+		}
 	}
 
 	q := d.KeyColumnQuals
@@ -168,6 +178,7 @@ func listSolutionArticles(ctx context.Context, d *plugin.QueryData, h *plugin.Hy
 	for {
 		articles, res, err := client.Solutions.ListSolutionArticles(&filter)
 		if err != nil {
+			plugin.Logger(ctx).Error("freshservice_solution_article.listSolutionArticles", "query_error", err)
 			return nil, fmt.Errorf("unable to obtain solution articles: %v", err)
 		}
 

@@ -1,6 +1,6 @@
 # Table: freshservice_department
 
-Obtain information about the Departments configured in your FreshService instance.
+Obtain information about Departments stored within the FreshService instance.
 
 ## Examples
 

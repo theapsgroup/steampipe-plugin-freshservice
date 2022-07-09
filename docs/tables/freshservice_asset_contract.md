@@ -22,5 +22,3 @@ from freshservice_asset_contract
 where asset_display_id = 1234
 and contract_status = 'Active';
 ```
-
-> TODO: Insert example when Contracts table is added to link the two.

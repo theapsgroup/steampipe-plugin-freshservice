@@ -14,3 +14,18 @@ from
 where
   software_id = 465465131;
 ```
+
+### List software installations associated with a specific user (requester)
+
+```sql
+select
+  *
+from
+  freshservice_software_installation fsi 
+inner join
+  freshservice_software fs 
+on 
+  fsi.software_id = fs.id
+where
+  fsi.user_id = 27000123;
+```
