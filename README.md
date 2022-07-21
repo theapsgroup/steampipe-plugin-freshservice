@@ -29,7 +29,7 @@ or set the following Environment Variables
 Run a query:
 
 ```sql
-select * from freshservice_ticket
+select email, active from freshservice_agent;
 ```
 
 ## Developing
@@ -50,7 +50,7 @@ cd steampipe-plugin-freshservice
 Build, which automatically installs the new version to your `~/.steampipe/plugins` directory:
 
 ```shell
-make install
+make
 ```
 
 Configure the plugin:
