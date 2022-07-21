@@ -16,6 +16,27 @@ og_image: "/images/plugins/theapsgroup/freshservice-social-graphic.png"
 
 [Steampipe](https://steampipe.io) is an open source CLI to instantly query cloud APIs using SQL.
 
+For example:
+
+```sql
+select
+  email,
+  active
+from
+  freshservice_agent;
+```
+
+```
++-------------------+----------+
+| email             | active   |
++-------------------+----------+
+| bob.ross@test.tld | false    |
+| john.doe@test.tld | true     |
+| jane.doe@test.tld | false    |
+| liz.stop@test.tld | true     |
++-------------------+----------+
+```
+
 ## Documentation
 
 - [Table definitions / examples](https://hub.steampipe.io/plugins/theapsgroup/freshservice/tables)
