@@ -105,7 +105,7 @@ func ticketColumns() []*plugin.Column {
 		{
 			Name:        "category",
 			Description: "Ticket category.",
-			Type:        proto.ColumnType_INT,
+			Type:        proto.ColumnType_STRING,
 		},
 		{
 			Name:        "sub_category",
