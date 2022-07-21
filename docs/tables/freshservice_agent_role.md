@@ -17,8 +17,8 @@ from
 
 ```sql
 select
-   a.email
-  ,r.name as role
+   a.email,
+   r.name as role
 from 
   freshservice.freshservice_agent a
 cross join 
