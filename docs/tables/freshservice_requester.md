@@ -24,13 +24,10 @@ select
   concat(m.first_name, ' ', m.last_name) as manager_name
 from
   freshservice_requester r
-left join
-  freshservice_requester m
-on
-  r.reporting_manager_id = m.id
+  left join freshservice_requester m on r.reporting_manager_id = m.id;
 ```
 
-### List inactive users 
+### List inactive users
 
 ```sql
 select

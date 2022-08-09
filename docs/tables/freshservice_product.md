@@ -18,25 +18,23 @@ where
 ### List all Products
 
 ```sql
-select 
+select
   *
 from
   freshservice_product;
 ```
 
 ### List all Products for visible Asset Types
+
 ```sql
-select 
+select
   p.id,
   p.name,
   p.status,
   p.manufacturer
 from
   freshservice_product p
-inner join 
-  freshservice_asset_type at
-on 
-  p.asset_type_id = at.id
+  inner join freshservice_asset_type at on p.asset_type_id = at.id
 where
   at.visible = true;
 ```

@@ -9,15 +9,18 @@ You **MUST** specify an `asset_display_id` in the `WHERE` or `JOIN` clause.
 ### List all components for a specific asset
 
 ```sql
-select *
-from freshervice_asset_component
-where asset_display_id = 1234;
+select
+  *
+from
+  freshervice_asset_component
+where
+  asset_display_id = 1234;
 ```
 
 ### List all components of all Assets
 
 ```sql
-select 
+select
   a.id,
   a.display_id,
   a.name,
@@ -27,8 +30,5 @@ select
   c.component_data
 from
   freshservice_asset a
-left join
-  freshservice_asset_component c 
-on 
-  a.display_id = c.asset_display_id;
+  left join freshservice_asset_component c on a.display_id = c.asset_display_id;
 ```

@@ -10,7 +10,7 @@ Obtain information about Contracts from the FreshService instance.
 select
   *
 from
- freshservice_contract;
+  freshservice_contract;
 ```
 
 ### List contracts which did not yet start
@@ -25,9 +25,7 @@ select
   c.start_date
 from
   freshservice_contract c
-inner join
-  freshservice_vendor v
-on c.vendor_id = v.id
+  inner join freshservice_vendor v on c.vendor_id = v.id
 where
   c.start_date > NOW()::timestamp;
 ```

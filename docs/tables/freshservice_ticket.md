@@ -40,12 +40,8 @@ select
   concat(a.first_name, ' ', a.last_name) as agent
 from
   freshservice_ticket t
-left outer join 
-  freshservice_agent a
-on
-  t.responder_id = a.id
+  left outer join freshservice_agent a on t.responder_id = a.id
 where
   status = 2
-and 
-  priority = 4;
+  and priority = 4;
 ```

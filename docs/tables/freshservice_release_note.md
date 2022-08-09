@@ -9,7 +9,7 @@ You **MUST** specify a `release_id` in the `WHERE` or `JOIN` clause.
 ### List all notes for a specific release
 
 ```sql
-select 
+select
   *
 from
   freshservice_release_note

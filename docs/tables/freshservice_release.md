@@ -26,12 +26,8 @@ select
   r.planned_end_date
 from
   freshservice_release r
-left join 
-  freshservice_agent a
-on 
-  r.agent_id = a.id
+  left join freshservice_agent a on r.agent_id = a.id
 where
   r.status < 5
-and
-  r.priority >=3;
+  and r.priority >=3;
 ```

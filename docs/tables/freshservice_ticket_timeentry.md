@@ -26,6 +26,5 @@ from
   freshservice_ticket_timeentry
 where
   ticket_id = 2010101010
-and 
-  billable = false;
+  and billable = false;
 ```

@@ -24,10 +24,7 @@ select
   concat(a.first_name, ' ', a.last_name) as agent_name
 from
   freshservice_software s
-inner join
-  freshservice_agent a 
-on 
-  s.managed_by_id = a.id
+  inner join freshservice_agent a on s.managed_by_id = a.id
 where
   a.email = 'test@example.com';
 ```

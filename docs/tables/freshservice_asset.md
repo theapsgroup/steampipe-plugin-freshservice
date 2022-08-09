@@ -35,6 +35,6 @@ inner join
   freshservice_requester u
 on
   a.user_id = u.id
-where 
+where
   a.id = 27001020436;
 ```
