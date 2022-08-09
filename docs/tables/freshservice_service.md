@@ -12,6 +12,7 @@ select
 from
   freshservice_service;
 ```
+
 ### Get a specific service item by id
 
 ```sql

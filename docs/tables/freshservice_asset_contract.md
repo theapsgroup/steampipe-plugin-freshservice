@@ -9,23 +9,22 @@ You **MUST** specify an `asset_display_id` in the `WHERE` or `JOIN` clause.
 ### List all contracts associated to a specific asset
 
 ```sql
-select 
+select
   *
-from 
+from
   freshservice_asset_contract
-where 
+where
   asset_display_id = 1234;
 ```
 
 ### Obtain only active contracts for a specific asset
 
 ```sql
-select 
+select
   *
-from 
+from
   freshservice_asset_contract
-where 
+where
   asset_display_id = 1234
-and 
-  contract_status = 'Active';
+  and contract_status = 'Active';
 ```

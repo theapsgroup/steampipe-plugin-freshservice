@@ -20,7 +20,8 @@ select
   *
 from
   freshservice_announcement
-where state = 'scheduled';
+where
+  state = 'scheduled';
 ```
 
 ### List announcements created by a specific agent
@@ -32,9 +33,7 @@ select
   concat(ag.first_name, ' ', ag.last_name) as agent
 from
   freshservice_announcement a
-left join
-  freshservice_agent ag
-on
-  a.created_by = ag.id
-where ag.email = 'example@agent.com'
+  left join freshservice_agent ag on a.created_by = ag.id
+where
+  ag.email = 'example@agent.com';
 ```

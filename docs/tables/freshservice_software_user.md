@@ -18,12 +18,11 @@ where
 ### Get a specific user for a software
 
 ```sql
-select 
+select
   *
 from
   freshservice_software_user
 where
   software_id = 20585369
-and
-  id = 1008564;
+  and id = 1008564;
 ```

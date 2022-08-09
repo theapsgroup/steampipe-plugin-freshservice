@@ -37,9 +37,6 @@ select
   a.views,
   a.review_date
 from
-    freshservice_solution_article a
-inner join
-  freshservice_solution_category c
-on
-  a.category_id = c.id
+  freshservice_solution_article a
+  inner join freshservice_solution_category c on a.category_id = c.id;
 ```

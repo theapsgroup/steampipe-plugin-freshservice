@@ -61,7 +61,7 @@ steampipe plugin install theapsgroup/freshservice
 Configuration can be done via Environment Variables or via the Configuration file `~./steampipe/config/freshservice.spc`.
 
 Environment Variables:
-- `FRESHSERVICE_DOMAIN : The friendly sub-domain at which your instance is deployed (example: `my-corp` if your instance is `https://my-corp.freshservice.com`)
+- `FRESHSERVICE_DOMAIN` : The friendly sub-domain at which your instance is deployed (example: `my-corp` if your instance is `https://my-corp.freshservice.com`).
 - `FRESHSERVICE_TOKEN` : The API token you wish to use.
 
 Configuration File:
@@ -81,3 +81,8 @@ A quick test can be performed from your terminal with:
 ```shell
 steampipe query "select * from freshservice_ticket"
 ```
+
+## Get involved
+
+* Open source: https://github.com/theapsgroup/steampipe-plugin-freshservice
+* Community: [Slack Channel](https://steampipe.io/community/join)

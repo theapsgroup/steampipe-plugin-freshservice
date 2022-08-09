@@ -17,16 +17,12 @@ from
 
 ```sql
 select
-   a.email,
-   r.name as role
-from 
+  a.email,
+  r.name as role
+from
   freshservice.freshservice_agent a
-cross join 
-  jsonb_to_recordset(a.roles) as ar(role_id bigint)
-inner join
-  freshservice.freshservice_agent_role r 
-on 
-  r.id::bigint = ar.role_id
-order by 
+  cross join jsonb_to_recordset(a.roles) as ar(role_id bigint)
+  inner join freshservice.freshservice_agent_role r on r.id::bigint = ar.role_id
+order by
   email;
 ```

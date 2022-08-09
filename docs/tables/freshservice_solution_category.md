@@ -20,5 +20,6 @@ select
   *
 from
   freshservice_solution_category
-where id = 27075269;
+where
+  id = 27075269;
 ```

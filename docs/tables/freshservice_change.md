@@ -21,9 +21,7 @@ select
   a.email as agent
 from
   freshservice_change c
-inner join
-  freshservice_agent a
-on c.agent_id = a.id
+  inner join freshservice_agent a on c.agent_id = a.id
 where
   a.id = 12345;
 ```

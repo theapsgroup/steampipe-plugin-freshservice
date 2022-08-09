@@ -26,6 +26,5 @@ from
   freshservice_problem_task
 where
   problem_id = 2011111111
-and
-  due_date < NOW()::timestamp;
+  and due_date < NOW()::timestamp;
 ```
