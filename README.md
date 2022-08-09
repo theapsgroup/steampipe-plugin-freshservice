@@ -29,7 +29,13 @@ or set the following Environment Variables
 Run a query:
 
 ```sql
-select email, active from freshservice_agent;
+select
+  id,
+  name,
+  active,
+  category
+from
+  freshservice_sla_policy;
 ```
 
 ## Developing

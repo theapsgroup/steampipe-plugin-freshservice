@@ -20,21 +20,22 @@ For example:
 
 ```sql
 select
-  email,
-  active
+  id,
+  name,
+  active,
+  category
 from
-  freshservice_agent;
+  freshservice_sla_policy;
 ```
 
 ```
-+-------------------+----------+
-| email             | active   |
-+-------------------+----------+
-| bob.ross@test.tld | false    |
-| john.doe@test.tld | true     |
-| jane.doe@test.tld | false    |
-| liz.stop@test.tld | true     |
-+-------------------+----------+
++-------------+------------------------------+--------+----------+
+| id          | name                         | active | category |
++-------------+------------------------------+--------+----------+
+| 97000001922 | Some Procurement SLA Policy  | true   | custom   |
+| 97000012364 | IT Support SLA               | true   | custom   |
+| 97000000124 | Default SLA Policy           | true   | default  |
++-------------+------------------------------+--------+----------+
 ```
 
 ## Documentation
