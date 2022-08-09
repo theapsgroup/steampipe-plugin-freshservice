@@ -2,7 +2,7 @@
 organization: The APS Group
 category: ["SaaS"]
 icon_url: "/images/plugins/theapsgroup/freshservice.svg"
-brand_color: "#08C7FB"
+brand_color: "#148FCC"
 display_name: "FreshService"
 short_name: "freshservice"
 description: "Steampipe plugin for querying FreshService agents, assets, tickets and other resources."
