@@ -1,4 +1,10 @@
-## v0.0.1 [wip]
+## v0.0.2 [2022-10-07]
+
+_Enhancements_
+
+- Recompiled with go1.19 and plugin-sdk v4.1.7
+
+## v0.0.1 [2022-08-09]
 
 _What's new?_
 
