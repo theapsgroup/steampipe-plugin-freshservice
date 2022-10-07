@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	fs "github.com/theapsgroup/go-freshservice/freshservice"
-	"github.com/turbot/steampipe-plugin-sdk/v3/grpc/proto"
-	"github.com/turbot/steampipe-plugin-sdk/v3/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
+	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
 )
 
 func tableAgentRole() *plugin.Table {
