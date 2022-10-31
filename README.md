@@ -1,3 +1,4 @@
+![image](https://github.com/theapsgroup/steampipe-plugin-freshservice/raw/main/docs/freshservice-social-graphic.png)
 # FreshService plugin for Steampipe
 
 Use SQL to query information including Tickets, Agents, Assets and more from FreshService.
