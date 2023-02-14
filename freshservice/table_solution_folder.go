@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	fs "github.com/theapsgroup/go-freshservice/freshservice"
-	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 )
 
 func tableSolutionFolder() *plugin.Table {
@@ -110,7 +110,7 @@ func listSolutionFolders(ctx context.Context, d *plugin.QueryData, h *plugin.Hyd
 		},
 	}
 
-	q := d.KeyColumnQuals
+	q := d.EqualsQuals
 
 	if q["id"] != nil {
 		folderId := int(q["id"].GetInt64Value())

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	fs "github.com/theapsgroup/go-freshservice/freshservice"
-	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 )
 
 func tableTicketConversation() *plugin.Table {
@@ -97,7 +97,7 @@ func ticketConversationColumns() []*plugin.Column {
 
 // Hydrate Functions
 func listTicketConversations(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
-	ticketId := int(d.KeyColumnQuals["ticket_id"].GetInt64Value())
+	ticketId := int(d.EqualsQuals["ticket_id"].GetInt64Value())
 
 	client, err := connect(ctx, d)
 	if err != nil {

@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	fs "github.com/theapsgroup/go-freshservice/freshservice"
-	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin/transform"
+	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
 func tableChange() *plugin.Table {
@@ -172,7 +172,7 @@ func changeColumns() []*plugin.Column {
 
 // Hydrate Functions
 func getChange(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
-	id := int(d.KeyColumnQuals["id"].GetInt64Value())
+	id := int(d.EqualsQuals["id"].GetInt64Value())
 
 	client, err := connect(ctx, d)
 	if err != nil {
@@ -196,7 +196,7 @@ func listChanges(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
-	q := d.KeyColumnQuals
+	q := d.EqualsQuals
 	filter := fs.ListChangesOptions{
 		ListOptions: fs.ListOptions{
 			Page:    1,

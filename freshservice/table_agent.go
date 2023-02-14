@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	fs "github.com/theapsgroup/go-freshservice/freshservice"
-	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 )
 
 func tableAgent() *plugin.Table {
@@ -165,7 +165,7 @@ func agentColumns() []*plugin.Column {
 
 // Hydrate Functions
 func getAgent(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
-	id := int(d.KeyColumnQuals["id"].GetInt64Value())
+	id := int(d.EqualsQuals["id"].GetInt64Value())
 
 	client, err := connect(ctx, d)
 	if err != nil {
@@ -204,7 +204,7 @@ func listAgents(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData)
 		}
 	}
 
-	q := d.KeyColumnQuals
+	q := d.EqualsQuals
 
 	if q["email"] != nil {
 		e := q["email"].GetStringValue()

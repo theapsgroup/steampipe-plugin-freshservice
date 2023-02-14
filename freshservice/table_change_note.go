@@ -3,9 +3,9 @@ package freshservice
 import (
 	"context"
 	"fmt"
-	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin/transform"
+	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
 func tableChangeNote() *plugin.Table {
@@ -73,7 +73,7 @@ func changeNoteColumns() []*plugin.Column {
 
 // Hydrate Functions
 func listChangeNotes(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
-	changeId := int(d.KeyColumnQuals["change_id"].GetInt64Value())
+	changeId := int(d.EqualsQuals["change_id"].GetInt64Value())
 
 	client, err := connect(ctx, d)
 	if err != nil {
