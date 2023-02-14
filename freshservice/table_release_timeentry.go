@@ -3,9 +3,9 @@ package freshservice
 import (
 	"context"
 	"fmt"
-	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin/transform"
+	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
 func tableReleaseTimeEntry() *plugin.Table {
@@ -93,7 +93,7 @@ func releaseTimeEntryColumns() []*plugin.Column {
 
 // Hydrate Functions
 func listReleaseTimeEntries(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
-	releaseId := int(d.KeyColumnQuals["release_id"].GetInt64Value())
+	releaseId := int(d.EqualsQuals["release_id"].GetInt64Value())
 
 	client, err := connect(ctx, d)
 	if err != nil {

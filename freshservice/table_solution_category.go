@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	fs "github.com/theapsgroup/go-freshservice/freshservice"
-	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 )
 
 func tableSolutionCategory() *plugin.Table {
@@ -92,7 +92,7 @@ func listSolutionCategories(ctx context.Context, d *plugin.QueryData, h *plugin.
 		}
 	}
 
-	q := d.KeyColumnQuals
+	q := d.EqualsQuals
 
 	if q["id"] != nil {
 		catId := int(q["id"].GetInt64Value())

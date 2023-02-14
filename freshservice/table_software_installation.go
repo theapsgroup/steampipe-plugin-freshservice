@@ -3,9 +3,9 @@ package freshservice
 import (
 	"context"
 	"fmt"
-	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin/transform"
+	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
 func tableSoftwareInstallation() *plugin.Table {
@@ -89,7 +89,7 @@ func listSoftwareInstallations(ctx context.Context, d *plugin.QueryData, h *plug
 		return nil, fmt.Errorf("unable to create FreshService client: %v", err)
 	}
 
-	q := d.KeyColumnQuals
+	q := d.EqualsQuals
 	s := int(q["software_id"].GetInt64Value())
 
 	installs, _, err := client.Software.ListInstallations(s)

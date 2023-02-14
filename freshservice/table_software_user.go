@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	fs "github.com/theapsgroup/go-freshservice/freshservice"
-	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin/transform"
+	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
 func tableSoftwareUser() *plugin.Table {
@@ -103,7 +103,7 @@ func listSoftwareUsers(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 		}
 	}
 
-	q := d.KeyColumnQuals
+	q := d.EqualsQuals
 	s := int(q["software_id"].GetInt64Value())
 
 	if q["id"] != nil {

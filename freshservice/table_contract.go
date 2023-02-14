@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	fs "github.com/theapsgroup/go-freshservice/freshservice"
-	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 )
 
 func tableContract() *plugin.Table {
@@ -138,7 +138,7 @@ func contractColumns() []*plugin.Column {
 
 // Hydrate Functions
 func getContract(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
-	id := int(d.KeyColumnQuals["display_id"].GetInt64Value())
+	id := int(d.EqualsQuals["display_id"].GetInt64Value())
 
 	client, err := connect(ctx, d)
 	if err != nil {

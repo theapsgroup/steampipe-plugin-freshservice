@@ -1,3 +1,13 @@
+## v0.0.3 [WIP]
+
+_Enhancements_
+
+- Recompiled with steampipe-plugin-sdk v5.1.2
+
+_Bug fixes_
+
+- Fixed issue where `department_ids` column on `freshservice_requester` table was erroneously returning null [#42](https://github.com/theapsgroup/steampipe-plugin-freshservice/issues/42)
+
 ## v0.0.2 [2022-10-07]
 
 _Enhancements_
