@@ -5,7 +5,7 @@ Use SQL to query information including Tickets, Agents, Assets and more from Fre
 
 - **[Get started →](https://hub.steampipe.io/plugins/theapsgroup/freshservice)**
 - Documentation: [Table definitions & examples](https://hub.steampipe.io/plugins/theapsgroup/freshservice/tables)
-- Community: [Slack Channel](https://steampipe.io/community/join)
+- Community: [Join #steampipe on Slack →](https://turbot.com/community/join)
 - Get involved: [Issues](https://github.com/theapsgroup/steampipe-plugin-freshservice/issues)
 
 ## Quick start
